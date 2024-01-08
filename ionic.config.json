@@ -1,0 +1,7 @@
+{
+  "name": "AP5PM",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
