@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { BookSearchResponse } from 'src/app/models/search.model';
+import { OpenlibraryApiService } from 'src/app/services/openlibrary-api.service';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +9,9 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  data$: Observable<BookSearchResponse>;
 
-  constructor() {}
-
+  constructor(private openLibraryApiService: OpenlibraryApiService) {
+    this.data$ = this.openLibraryApiService.search$('programming');
+  }
 }
