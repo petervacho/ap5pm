@@ -12,6 +12,9 @@
   </ion-header>
 
   <div id="container">
-    <div *ngIf="data$ | async; let foo">{{ foo | json }}</div>
+    <div *ngIf="data$ | async; let results">
+      <p><b>Number of results: </b> {{ results["numFound"] }}</p>
+      <div *ngFor="let doc of results['docs'];">{{ doc['title'] }}</div>
+    </div>
   </div>
 </ion-content>
