@@ -2,13 +2,13 @@ export interface BookSearchResponse {
   numFound: number;
   start: number;
   numFoundExact: boolean;
-  docs: Doc[];
+  docs: BookSearchDoc[];
   num_found: number;
   q: string;
   offset?: any;
 }
 
-export interface Doc {
+export interface BookSearchDoc {
   key: string;
   type: string; // Seems to always be "work"
   seed: string[];

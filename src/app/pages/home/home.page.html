@@ -4,17 +4,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Search Books</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchTermChanged()"></ion-searchbar>
 
-  <div id="container">
-    <div *ngIf="data$ | async; let results">
-      <p><b>Number of results: </b> {{ results["numFound"] }}</p>
-      <div *ngFor="let doc of results['docs'];">{{ doc['title'] }}</div>
-    </div>
-  </div>
+  <ion-list *ngIf="items.length > 0">
+    <ion-item *ngFor="let item of items"> {{ item['title'] }} </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="Loading more data..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BookSearchResponse } from 'src/app/models/search.model';
+import { Component, OnInit } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { BookSearchDoc, BookSearchResponse } from 'src/app/models/search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api.service';
 
 @Component({
@@ -8,10 +8,44 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api.service'
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
-  data$: Observable<BookSearchResponse>;
+export class HomePage implements OnInit {
+  public items: BookSearchDoc[] = [];
+  public searchTerm: string = '';
+  public pageNumber: number = 1;
+  private limit: number = 20;
 
-  constructor(private openLibraryApiService: OpenlibraryApiService) {
-    this.data$ = this.openLibraryApiService.search$('programming');
+  constructor(private openLibraryApiService: OpenlibraryApiService) {}
+
+  ngOnInit(): void {
+    this.search();
+  }
+
+  async search() {
+    const result = await firstValueFrom(
+      this.openLibraryApiService.search$(
+        this.searchTerm,
+        this.pageNumber,
+        this.limit,
+      ),
+    );
+    this.items = [...this.items, ...result.docs];
+  }
+
+  onSearchTermChanged() {
+    this.pageNumber = 1;
+    this.items = [];
+    this.search();
+  }
+
+  loadData(event: any) {
+    // TODO: Check max result amount, and figure out when to stop
+    // (once we already obtained all returned results).
+    this.pageNumber++;
+    // We need this to be blocking, so that the `ion-infinite-scroll` can
+    // properly show the loading bar (since the API can be pretty slow sometimes).
+    // Using observables in the templates with an async pipe would be non-blocking,
+    // and can cause issues with immediately requesting next page, even though the
+    // previous one didn't yet load.
+    this.search().then(() => event.target.complete());
   }
 }
