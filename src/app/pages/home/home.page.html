@@ -8,7 +8,18 @@
   <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchTermChanged()"></ion-searchbar>
 
   <ion-list *ngIf="items.length > 0">
-    <ion-item *ngFor="let item of items"> {{ item['title'] }} </ion-item>
+    <ion-item *ngFor="let item of items" (click)="forwardWorkData(item)" routerLink="/workDetail">
+      <ion-icon name="newspaper-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ item["title"] }}</h2>
+        <!-- prettier-ignore -->
+        <p>
+          <b>Author: </b>{{ item["author_name"] }},
+          <b>First Published: </b>{{ item["first_publish_year"] }},
+          <b>Editions: </b>{{ item["edition_count"] }}
+        </p>
+      </ion-label>
+    </ion-item>
   </ion-list>
 
   <ion-infinite-scroll (ionInfinite)="loadData($event)">

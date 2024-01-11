@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { WorkSearchDoc } from 'src/app/models/search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
+import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +11,14 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibr
 })
 export class HomePage implements OnInit {
   public items: WorkSearchDoc[] = [];
-  public searchTerm: string = '';
+  public searchTerm: string = 'tolkien';
   public pageNumber: number = 1;
   private limit: number = 20;
 
-  constructor(private openLibraryApiService: OpenlibraryApiService) {}
+  constructor(
+    private openLibraryApiService: OpenlibraryApiService,
+    private sharedService: SharedService,
+  ) {}
 
   ngOnInit(): void {
     this.search();
@@ -47,5 +51,11 @@ export class HomePage implements OnInit {
     // and can cause issues with immediately requesting next page, even though the
     // previous one didn't yet load.
     this.search().then(() => event.target.complete());
+  }
+
+  // Store the data about a work that was just clicked on to the service,
+  // so that it can be accessed from the detail page. This runs before routerLink
+  forwardWorkData(item: WorkSearchDoc) {
+    this.sharedService.setData('workDetail', item);
   }
 }
