@@ -5,11 +5,11 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibr
 import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-work-search',
+  templateUrl: 'work-search.page.html',
+  styleUrls: ['work-search.page.scss'],
 })
-export class HomePage implements OnInit {
+export class WorkSearchPage implements OnInit {
   public items: WorkSearchDoc[] = [];
   public searchTerm: string = 'tolkien';
   public pageNumber: number = 1;
@@ -18,7 +18,7 @@ export class HomePage implements OnInit {
   constructor(
     private openLibraryApiService: OpenlibraryApiService,
     private sharedService: SharedService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.search();
