@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { WorkSearchDoc } from 'src/app/models/search.model';
-import { OpenlibraryApiService } from 'src/app/services/openlibrary-api.service';
+import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 
 @Component({
   selector: 'app-home',

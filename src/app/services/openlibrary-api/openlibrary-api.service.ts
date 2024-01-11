@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { WorkSearchResponse } from '../models/search.model';
+import { WorkSearchDoc, WorkSearchResponse } from '../../models/search.model';
 
 @Injectable({
   providedIn: 'root',
