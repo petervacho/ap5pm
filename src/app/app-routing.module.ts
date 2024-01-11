@@ -11,6 +11,13 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'workDetail',
+    loadChildren: () =>
+      import('./pages/work-detail/work-detail.module').then(
+        (m) => m.WorkDetailPageModule,
+      ),
+  },
 ];
 
 @NgModule({
