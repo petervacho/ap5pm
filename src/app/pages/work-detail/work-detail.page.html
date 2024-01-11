@@ -11,5 +11,14 @@
     </ion-toolbar>
   </ion-header>
 
-  <div>{{ workDetail | json }}</div>
+  <ion-list *ngIf="loadedEditions.length > 0">
+    <ion-item *ngFor="let editionData of loadedEditions">
+      <ion-label> {{ editionData | json }} </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more editions...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
