@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { WorkSearchDoc } from 'src/app/models/search.model';
+import { WorkDataDetails } from 'src/app/models/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -10,7 +10,7 @@ import { SharedService } from 'src/app/services/shared/shared.service';
   styleUrls: ['work-search.page.scss'],
 })
 export class WorkSearchPage implements OnInit {
-  public items: WorkSearchDoc[] = [];
+  public items: WorkDataDetails[] = [];
   public searchTerm: string = 'tolkien';
   public pageNumber: number = 1;
   private limit: number = 20;
@@ -55,7 +55,7 @@ export class WorkSearchPage implements OnInit {
 
   // Store the data about a work that was just clicked on to the service,
   // so that it can be accessed from the detail page. This runs before routerLink
-  forwardWorkData(item: WorkSearchDoc) {
+  forwardWorkData(item: WorkDataDetails) {
     this.sharedService.setData('workDetail', item);
   }
 }

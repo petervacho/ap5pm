@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { WorkSearchDoc } from 'src/app/models/search.model';
+import { WorkDataDetails } from 'src/app/models/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -10,7 +10,7 @@ import { SharedService } from 'src/app/services/shared/shared.service';
   styleUrls: ['./work-detail.page.scss'],
 })
 export class WorkDetailPage implements OnInit {
-  workDetail: WorkSearchDoc;
+  workDetail: WorkDataDetails;
 
   // Pagination stuff for the editions infinite-scroll
   loadedEditions: any[] = [];
