@@ -15,7 +15,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'workDetail',
+    path: 'work-detail',
     loadChildren: () =>
       import('./pages/work-detail/work-detail.module').then(
         (m) => m.WorkDetailPageModule,
