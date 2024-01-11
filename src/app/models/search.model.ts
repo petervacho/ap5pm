@@ -1,14 +1,14 @@
-export interface BookSearchResponse {
+export interface WorkSearchResponse {
   numFound: number;
   start: number;
   numFoundExact: boolean;
-  docs: BookSearchDoc[];
+  docs: WorkSearchDoc[];
   num_found: number;
   q: string;
   offset?: any;
 }
 
-export interface BookSearchDoc {
+export interface WorkSearchDoc {
   key: string;
   type: string; // Seems to always be "work"
   seed: string[];

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { BookSearchDoc, BookSearchResponse } from 'src/app/models/search.model';
+import { WorkSearchDoc } from 'src/app/models/search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api.service'
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-  public items: BookSearchDoc[] = [];
+  public items: WorkSearchDoc[] = [];
   public searchTerm: string = '';
   public pageNumber: number = 1;
   private limit: number = 20;
