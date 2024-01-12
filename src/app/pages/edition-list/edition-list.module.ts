@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { WorkDetailPageRoutingModule } from './work-detail-routing.module';
+import { EditionListPageRoutingModule } from './edition-list-routing.module';
 
-import { WorkDetailPage } from './work-detail.page';
+import { EditionListPage } from './edition-list.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    WorkDetailPageRoutingModule
+    EditionListPageRoutingModule
   ],
-  declarations: [WorkDetailPage]
+  declarations: [EditionListPage]
 })
-export class WorkDetailPageModule {}
+export class EditionListPageModule {}

@@ -60,6 +60,6 @@ export class WorkSearchPage implements OnInit {
   forwardWorkData(item: WorkDataDetails) {
     this.sharedService.setData('workDetail', item);
     const work_id = item.key.slice('/works/'.length);
-    this.router.navigate(['/work-detail/', work_id]);
+    this.router.navigate(['/edition-list/', work_id]);
   }
 }

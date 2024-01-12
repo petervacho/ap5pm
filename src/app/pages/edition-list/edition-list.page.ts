@@ -46,11 +46,11 @@ export class FormattedEditionData {
 }
 
 @Component({
-  selector: 'app-work-detail',
-  templateUrl: './work-detail.page.html',
-  styleUrls: ['./work-detail.page.scss'],
+  selector: 'app-edition-list',
+  templateUrl: './edition-list.page.html',
+  styleUrls: ['./edition-list.page.scss'],
 })
-export class WorkDetailPage implements OnInit {
+export class EditionListPage implements OnInit {
   private workId$: Observable<string>;
 
   // Pagination stuff for the editions infinite-scroll
