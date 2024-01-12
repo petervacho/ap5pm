@@ -15,7 +15,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'work-detail',
+    path: 'work-detail/:work_id',
     loadChildren: () =>
       import('./pages/work-detail/work-detail.module').then(
         (m) => m.WorkDetailPageModule,

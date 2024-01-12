@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { WorkDataDetails } from 'src/app/models/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
@@ -18,6 +19,7 @@ export class WorkSearchPage implements OnInit {
   constructor(
     private openLibraryApiService: OpenlibraryApiService,
     private sharedService: SharedService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -57,5 +59,7 @@ export class WorkSearchPage implements OnInit {
   // so that it can be accessed from the detail page. This runs before routerLink
   forwardWorkData(item: WorkDataDetails) {
     this.sharedService.setData('workDetail', item);
+    const work_id = item.key.slice('/works/'.length);
+    this.router.navigate(['/work-detail/', work_id]);
   }
 }

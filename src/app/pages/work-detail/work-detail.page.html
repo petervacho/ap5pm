@@ -11,9 +11,16 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="loadedEditions.length > 0">
-    <ion-item *ngFor="let editionData of loadedEditions">
-      <ion-label> {{ editionData | json }} </ion-label>
+  <ion-list *ngIf="fetchedEditions.length > 0">
+    <ion-item *ngFor="let edition of fetchedEditions">
+      <ion-label>
+        <h2>{{ edition["title"] }}</h2>
+        <p>
+          <span><b>Publisher(s): </b>{{ edition["publishers"] }}, </span>
+          <span><b>Publish date: </b>{{ edition["publish_date"] }}, </span>
+          <span><b>Language(s): </b>{{ edition["languages"] }}</span>
+        </p>
+      </ion-label>
     </ion-item>
   </ion-list>
 
