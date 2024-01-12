@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { EditionData } from 'src/app/models/edition.model';
-import { WorkData } from 'src/app/models/work.model';
+import { WorkSearchData } from 'src/app/models/work_search.model';
 import { EditionBatchData } from 'src/app/models/edition_batch.model';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class OpenlibraryApiService {
 
   search$(query: string, page_no: number = 1, limit: number = 10) {
     const encodedQuery = encodeURIComponent(query);
-    return this.http.get<WorkData>(
+    return this.http.get<WorkSearchData>(
       `${environment.baseUrl}/search.json?limit=${limit}&page=${page_no}&q=${encodedQuery}`,
     );
   }

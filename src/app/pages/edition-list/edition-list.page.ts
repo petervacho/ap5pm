@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, firstValueFrom, map } from 'rxjs';
 import { EditionData } from 'src/app/models/edition.model';
-import { WorkDataDetails } from 'src/app/models/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -76,7 +75,7 @@ export class EditionListPage implements OnInit {
     this.loadEditionBatch();
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   private async loadEditionBatch() {
     if (this.keepFetching == false) {
