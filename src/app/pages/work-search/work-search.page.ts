@@ -57,7 +57,7 @@ export class WorkSearchPage implements OnInit {
 
   // Store the data about a work that was just clicked on to the service,
   // so that it can be accessed from the detail page. This runs before routerLink
-  forwardWorkData(item: WorkDataDetails) {
+  redirectListEditions(item: WorkDataDetails) {
     this.sharedService.setData('workDetail', item);
     const work_id = item.key.slice('/works/'.length);
     this.router.navigate(['/edition-list/', work_id]);
