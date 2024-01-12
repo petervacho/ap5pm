@@ -21,10 +21,9 @@ export interface EditionData {
   lccn?: string[];
   lc_classifications?: string[];
   source_records?: string[];
-  series?: string[];
   physical_format?: string;
   authors?: Work[];
-  contributions?: string[];
+  contributors?: Contributor[];
   subjects?: string[];
   translation_of?: string;
   isbn_13?: string[];
@@ -33,7 +32,7 @@ export interface EditionData {
   full_title?: string;
   publish_places?: string[];
   local_id?: string[];
-  location?: string[];
+  // location?
   publish_country?: string;
   description?: Created | string;
   copyright_date?: string;
@@ -41,7 +40,7 @@ export interface EditionData {
   edition_name?: string;
   by_statement?: string;
   other_titles?: string[];
-  contributors?: Contributor[];
+  contributions?: string[];
   dewey_decimal_class?: string[];
   translated_from?: Work[];
   physical_dimensions?: string;
@@ -51,11 +50,21 @@ export interface EditionData {
   uri_descriptions?: string[];
   uris?: string[];
   url?: string[];
+
+  series?: string[];
+  first_sentence?: string;
+  subject_people?: string[];
+  table_of_contents?: Tableofcontent[];
+  ia_loaded_id?: string[];
 }
 
-export interface Contributor {
-  role: string;
-  name: string;
+export interface Tableofcontent {
+  title: string;
+  level: number;
+
+  label?: string;
+  pagenum?: string;
+  type?: Work;
 }
 
 export interface Created {
@@ -63,11 +72,17 @@ export interface Created {
   value: string;
 }
 
+export interface Contributor {
+  name: string;
+  role: string;
+}
+
 export interface Classifications {
   nur?: string[];
 }
 
 export interface Identifiers {
+  scribd?: string[];
   goodreads?: string[];
   amazon?: string[];
   librarything?: string[];
