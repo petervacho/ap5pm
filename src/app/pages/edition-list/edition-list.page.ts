@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, firstValueFrom, map } from 'rxjs';
 import { EditionData } from 'src/app/models/edition.model';
 import { WorkDataDetails } from 'src/app/models/work.model';
@@ -15,9 +15,11 @@ export class FormattedEditionData {
   publishers: string;
   languages: string;
   publish_date: string;
+  edition_id: string;
 
   constructor(private editionData: EditionData) {
     this.title = editionData.title;
+    this.edition_id = editionData.key.slice('/books/'.length);
     this.publish_date =
       editionData.publish_date != undefined ? editionData.publish_date : 'N/A';
 
@@ -61,6 +63,7 @@ export class EditionListPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private openLibraryApiService: OpenlibraryApiService,
+    private router: Router,
   ) {
     // TODO: Fetch shared work data, for work's title, if not availabel, obtain from workId url param
 
@@ -119,5 +122,9 @@ export class EditionListPage implements OnInit {
     if (this.keepFetching == false) {
       event.target.disabled = true;
     }
+  }
+
+  redirectEdition(item: FormattedEditionData) {
+    this.router.navigate(['/edition-detail/', item.edition_id]);
   }
 }

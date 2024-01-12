@@ -21,6 +21,13 @@ const routes: Routes = [
         (m) => m.EditionListPageModule,
       ),
   },
+  {
+    path: 'edition-detail/:edition_id',
+    loadChildren: () =>
+      import('./pages/edition-detail/edition-detail.module').then(
+        (m) => m.EditionDetailPageModule,
+      ),
+  },
 ];
 
 @NgModule({

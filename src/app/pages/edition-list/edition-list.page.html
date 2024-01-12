@@ -12,7 +12,7 @@
   </ion-header>
 
   <ion-list *ngIf="fetchedEditions.length > 0">
-    <ion-item *ngFor="let edition of fetchedEditions">
+    <ion-item *ngFor="let edition of fetchedEditions" (click)="redirectEdition(edition)" routerLink="#">
       <ion-label>
         <h2>{{ edition["title"] }}</h2>
         <p>
