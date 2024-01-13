@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, firstValueFrom, from, map, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  firstValueFrom,
+  from,
+  map,
+  of,
+} from 'rxjs';
 import { EditionData } from 'src/app/models/edition.model';
 import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
@@ -59,7 +66,11 @@ export class EditionListPage implements OnInit {
   // Pagination stuff for the editions infinite-scroll
   private offset: number = 0;
   private keepFetching: boolean = true;
-  public fetchedEditions: FormattedEditionData[] = [];
+  private fetchedEditionsSubject = new BehaviorSubject<FormattedEditionData[]>(
+    [],
+  );
+  public fetchedEditions$: Observable<FormattedEditionData[]> =
+    this.fetchedEditionsSubject.asObservable();
 
   constructor(
     private route: ActivatedRoute,
@@ -90,6 +101,7 @@ export class EditionListPage implements OnInit {
 
   ngOnInit() { }
 
+  // Obtain the work's name from API (only used if we weren't able to get it from the shared service)
   private async getWorkName() {
     const workId = await firstValueFrom(this.workId$);
     const response = await firstValueFrom(
@@ -129,7 +141,10 @@ export class EditionListPage implements OnInit {
     const formattedEntries = response.entries.map(
       (entry) => new FormattedEditionData(entry),
     );
-    this.fetchedEditions = [...this.fetchedEditions, ...formattedEntries];
+    this.fetchedEditionsSubject.next([
+      ...this.fetchedEditionsSubject.value,
+      ...formattedEntries,
+    ]);
   }
 
   async loadData(event: any) {

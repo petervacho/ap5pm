@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
@@ -11,8 +11,11 @@ import { SharedService } from 'src/app/services/shared/shared.service';
   styleUrls: ['work-search.page.scss'],
 })
 export class WorkSearchPage implements OnInit {
-  public items: WorkSearchDataDetails[] = [];
-  public searchTerm: string = 'tolkien';
+  public searchTerm: string = 'Tolkien';
+
+  private itemsSubject = new BehaviorSubject<WorkSearchDataDetails[]>([]);
+  public items$: Observable<WorkSearchDataDetails[]> =
+    this.itemsSubject.asObservable();
   public pageNumber: number = 1;
   private limit: number = 20;
 
@@ -34,12 +37,12 @@ export class WorkSearchPage implements OnInit {
         this.limit,
       ),
     );
-    this.items = [...this.items, ...result.docs];
+    this.itemsSubject.next([...this.itemsSubject.value, ...result.docs]);
   }
 
   onSearchTermChanged() {
     this.pageNumber = 1;
-    this.items = [];
+    this.itemsSubject.next([]);
     this.search();
   }
 

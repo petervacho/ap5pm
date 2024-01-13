@@ -15,8 +15,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="fetchedEditions.length > 0">
-    <ion-item *ngFor="let edition of fetchedEditions" (click)="redirectEdition(edition)" routerLink="#">
+  <ion-list *ngIf="fetchedEditions$ | async; let editions">
+    <ion-item *ngFor="let edition of editions" (click)="redirectEdition(edition)" routerLink="#">
       <ion-label>
         <h2>{{ edition["title"] }}</h2>
         <p>
