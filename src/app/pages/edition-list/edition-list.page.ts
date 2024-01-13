@@ -8,51 +8,10 @@ import {
   map,
   of,
 } from 'rxjs';
-import { EditionData } from 'src/app/models/edition.model';
+import { FormattedEditionData } from 'src/app/models/edition.model';
 import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
-
-// The actual JSON data returned from the API is horribly formatted to the
-// point where using it in the view directly would introduce a lot of clutter.
-// Instead, create a class with the formatting work already done which will be
-// used in the view in place of the original response.
-export class FormattedEditionData {
-  title: string;
-  publishers: string;
-  languages: string;
-  publish_date: string;
-  edition_id: string;
-
-  constructor(private editionData: EditionData) {
-    this.title = editionData.title;
-    this.edition_id = editionData.key.slice('/books/'.length);
-    this.publish_date =
-      editionData.publish_date != undefined ? editionData.publish_date : 'N/A';
-
-    if (
-      editionData.languages != undefined &&
-      editionData.languages.length > 0
-    ) {
-      this.languages = editionData.languages
-        .map((item) => item.key) // for some reason, the items are in { key = ... } structure
-        .map((item) => item.slice('/languages/'.length)) // remove the /languaes/ prefix
-        .map((item) => item.charAt(0).toUpperCase() + item.slice(1)) // capitalize
-        .join(', ');
-    } else {
-      this.languages = 'N/A';
-    }
-
-    if (
-      editionData.publishers != undefined &&
-      editionData.publishers.length > 0
-    ) {
-      this.publishers = editionData.publishers.join(', ');
-    } else {
-      this.publishers = 'N/A';
-    }
-  }
-}
 
 @Component({
   selector: 'app-edition-list',

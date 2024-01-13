@@ -102,3 +102,38 @@ export interface Identifiers {
 export interface Work {
   key: string;
 }
+
+// The actual JSON data returned from the API is horribly formatted to the
+// point where using it in the view directly would introduce a lot of clutter.
+// Instead, create a class with the formatting work already done which will be
+// used in the view in place of the original response.
+export class FormattedEditionData {
+  title: string;
+  publishers: string;
+  languages: string;
+  publish_date: string;
+  edition_id: string;
+
+  constructor(public rawData: EditionData) {
+    this.title = rawData.title;
+    this.edition_id = rawData.key.slice('/books/'.length);
+    this.publish_date =
+      rawData.publish_date != undefined ? rawData.publish_date : 'N/A';
+
+    if (rawData.languages != undefined && rawData.languages.length > 0) {
+      this.languages = rawData.languages
+        .map((item) => item.key) // for some reason, the items are in { key = ... } structure
+        .map((item) => item.slice('/languages/'.length)) // remove the /languaes/ prefix
+        .map((item) => item.charAt(0).toUpperCase() + item.slice(1)) // capitalize
+        .join(', ');
+    } else {
+      this.languages = 'N/A';
+    }
+
+    if (rawData.publishers != undefined && rawData.publishers.length > 0) {
+      this.publishers = rawData.publishers.join(', ');
+    } else {
+      this.publishers = 'N/A';
+    }
+  }
+}
