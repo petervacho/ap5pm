@@ -13,7 +13,7 @@ export class SharedService {
     this.dataStore[key] = data;
   }
 
-  getData<T>(key: string): T {
-    return this.dataStore[key] as T;
+  getData<T>(key: string): T | null {
+    return key in this.dataStore ? (this.dataStore[key] as T) : null;
   }
 }

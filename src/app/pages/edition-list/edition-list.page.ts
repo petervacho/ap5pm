@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, firstValueFrom, map } from 'rxjs';
+import { Observable, firstValueFrom, from, map, of } from 'rxjs';
 import { EditionData } from 'src/app/models/edition.model';
+import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -53,6 +54,7 @@ export class FormattedEditionData {
 })
 export class EditionListPage implements OnInit {
   private workId$: Observable<string>;
+  public workName$: Observable<string>;
 
   // Pagination stuff for the editions infinite-scroll
   private offset: number = 0;
@@ -62,20 +64,39 @@ export class EditionListPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private openLibraryApiService: OpenlibraryApiService,
+    private sharedService: SharedService,
     private router: Router,
   ) {
-    // TODO: Fetch shared work data, for work's title, if not availabel, obtain from workId url param
+    const workDetail =
+      sharedService.getData<WorkSearchDataDetails>('workDetail');
+    if (workDetail != null) {
+      // Create an observable which only emits a single constant value
+      // (this should be quicker than the actual logic of using the ActivatedRoute)
+      this.workId$ = of(workDetail.key.slice('/works/'.length));
+      this.workName$ = of(workDetail.title);
+    } else {
+      // Angular doesn't expose parameters immediately, it might take a while until they're available.
+      // Subscribe to them from the params observable, into workId
+      this.workId$ = this.route.params.pipe(map((params) => params['work_id']));
 
-    // Angular doesn't expose parameters immediately, it might take a while until they're available.
-    // Subscribe to them from the params observable, into workId
-    this.workId$ = this.route.params.pipe(map((params) => params['work_id']));
+      // Get the work name from an API call
+      this.workName$ = from(this.getWorkName()); // converts Promise to Observable
+    }
 
     // Perform the initial load (ion-infinite-scroll won't trigger it on it's own, since
     // without any data, there's no scrollbar, and so no scroll down action to trigger it)
     this.loadEditionBatch();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  private async getWorkName() {
+    const workId = await firstValueFrom(this.workId$);
+    const response = await firstValueFrom(
+      this.openLibraryApiService.get_work$(workId),
+    );
+    return response.title;
+  }
 
   private async loadEditionBatch() {
     if (this.keepFetching == false) {
