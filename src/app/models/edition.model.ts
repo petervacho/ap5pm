@@ -174,9 +174,9 @@ export class FormattedEditionData {
     );
   }
 
-  // Get the first small-sized cover URL, if any
-  get thumbnail(): string | null {
-    const urls = this.getCoverUrls('S');
+  // Get the first cover URL, if any
+  get_thumbnail(size: 'S' | 'M' | 'L'): string | null {
+    const urls = this.getCoverUrls(size);
     return urls.length > 0 ? urls[0] : null;
   }
 }

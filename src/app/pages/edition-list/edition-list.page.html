@@ -11,13 +11,14 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">edition-list</ion-title>
+      <ion-title size="large">{{ workName$ | async }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-list *ngIf="fetchedEditions$ | async; let editions">
     <ion-item *ngFor="let edition of editions" (click)="redirectEdition(edition)" routerLink="#">
-      <img *ngIf="edition.thumbnail as thumbnail; else noThumbnail" [src]="thumbnail" alt="Book cover" slot="start" />
+      <img *ngIf="edition.get_thumbnail('S') as thumbnail; else noThumbnail" [src]="thumbnail" alt="Book cover"
+        slot="start" />
       <ng-template #noThumbnail>
         <ion-icon name="book-outline" slot="start"></ion-icon>
       </ng-template>
