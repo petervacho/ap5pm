@@ -41,7 +41,6 @@ export class EditionListPage implements OnInit {
       sharedService.getData<WorkSearchDataDetails>('workDetail');
     if (workDetail != null) {
       // Create an observable which only emits a single constant value
-      // (this should be quicker than the actual logic of using the ActivatedRoute)
       this.workId$ = of(workDetail.key.slice('/works/'.length));
       this.workName$ = of(workDetail.title);
     } else {
@@ -119,6 +118,7 @@ export class EditionListPage implements OnInit {
   }
 
   redirectEdition(item: FormattedEditionData) {
+    this.sharedService.setData('editionDetail', item);
     this.router.navigate(['/edition-detail/', item.edition_id]);
   }
 }
