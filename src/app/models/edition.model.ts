@@ -24,7 +24,7 @@ export interface EditionData {
   lc_classifications?: string[];
   source_records?: string[];
   physical_format?: string;
-  authors?: Work[];
+  authors?: Work[]; // usually unavailable, prefer work's authors
   contributors?: Contributor[];
   subjects?: string[];
   translation_of?: string;
