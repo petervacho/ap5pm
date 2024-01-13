@@ -16,4 +16,13 @@ export class SharedService {
   getData<T>(key: string): T | null {
     return key in this.dataStore ? (this.dataStore[key] as T) : null;
   }
+
+  popData<T>(key: string): T | null {
+    if (key in this.dataStore) {
+      const temp = this.dataStore[key];
+      delete this.dataStore[key];
+      return temp;
+    }
+    return null;
+  }
 }
