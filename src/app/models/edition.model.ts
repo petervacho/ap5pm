@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+
 export interface EditionData {
   works: Work[];
   title: string;
@@ -108,32 +110,73 @@ export interface Work {
 // Instead, create a class with the formatting work already done which will be
 // used in the view in place of the original response.
 export class FormattedEditionData {
-  title: string;
-  publishers: string;
-  languages: string;
-  publish_date: string;
-  edition_id: string;
+  constructor(public rawData: EditionData) { }
 
-  constructor(public rawData: EditionData) {
-    this.title = rawData.title;
-    this.edition_id = rawData.key.slice('/books/'.length);
-    this.publish_date =
-      rawData.publish_date != undefined ? rawData.publish_date : 'N/A';
+  // Helper type guard method to check whether an optional list contains data.
+  //
+  // This is a very simple check, but because of how commonly it's needed
+  // it's been made into a simple function, to reduce the repetition.
+  private checkList(lst: any[] | undefined): lst is any[] {
+    return lst != undefined && lst.length > 0;
+  }
 
-    if (rawData.languages != undefined && rawData.languages.length > 0) {
-      this.languages = rawData.languages
-        .map((item) => item.key) // for some reason, the items are in { key = ... } structure
-        .map((item) => item.slice('/languages/'.length)) // remove the /languaes/ prefix
-        .map((item) => item.charAt(0).toUpperCase() + item.slice(1)) // capitalize
-        .join(', ');
-    } else {
-      this.languages = 'N/A';
+  get title(): string {
+    return this.rawData.title;
+  }
+
+  get edition_id(): string {
+    return this.rawData.key.slice('/books/'.length);
+  }
+
+  get publishers(): string {
+    return this.checkList(this.rawData.publishers)
+      ? this.rawData.publishers.join(', ')
+      : 'N/A';
+  }
+
+  get publish_date(): string {
+    // Annoyingly, this isn't returned in a standardized format
+    // sometimes it's ISO (2024-01-25), other times it's 'Jan 25 2024',
+    // or something completely different, so as much as I'd like to make
+    // this return something with a stable format here, I can't.
+    return this.rawData.publish_date != undefined
+      ? this.rawData.publish_date
+      : 'N/A';
+  }
+
+  get languages(): string {
+    if (!this.checkList(this.rawData.languages)) {
+      return 'N/A';
     }
 
-    if (rawData.publishers != undefined && rawData.publishers.length > 0) {
-      this.publishers = rawData.publishers.join(', ');
-    } else {
-      this.publishers = 'N/A';
+    // TODO: This will return a language key (like ger/eng/..)
+    // it would be nice to instead return a full language name.
+    return this.rawData.languages
+      .map((item) => item.key) // for some reason, the items are in { key = ... } structure
+      .map((item) => item.slice('/languages/'.length)) // remove the /languaes/ prefix
+      .map((item) => item.charAt(0).toUpperCase() + item.slice(1)) // capitalize
+      .join(', ');
+  }
+
+  getCoverUrls(size: 'S' | 'M' | 'L'): string[] {
+    if (!this.checkList(this.rawData.covers)) {
+      return [];
     }
+
+    // Add 'covers' subdomain.
+    const baseUrl = new URL(environment.baseUrl);
+    baseUrl.hostname = `covers.${baseUrl.hostname}`;
+    const coversUrl = baseUrl.toString();
+
+    // https://covers.openlibrary.org/b/id/14553071-M.jpg
+    return this.rawData.covers.map(
+      (cover_id) => `${coversUrl}b/id/${cover_id}-${size}.jpg`,
+    );
+  }
+
+  // Get the first small-sized cover URL, if any
+  get thumbnail(): string | null {
+    const urls = this.getCoverUrls('S');
+    return urls.length > 0 ? urls[0] : null;
   }
 }
