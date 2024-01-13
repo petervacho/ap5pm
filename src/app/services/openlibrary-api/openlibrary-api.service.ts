@@ -1,10 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { EditionData } from 'src/app/models/edition.model';
+import {
+  EditionData,
+  FormattedEditionData,
+} from 'src/app/models/edition.model';
 import { WorkData } from 'src/app/models/work.model';
 import { WorkSearchData } from 'src/app/models/work_search.model';
 import { EditionBatchData } from 'src/app/models/edition_batch.model';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -32,8 +36,10 @@ export class OpenlibraryApiService {
   }
 
   get_edition$(edition_key: string) {
-    return this.http.get<EditionData>(
+    const response$ = this.http.get<EditionData>(
       `${environment.baseUrl}/books/${edition_key}.json`,
     );
+
+    return response$.pipe(map((rawData) => new FormattedEditionData(rawData)));
   }
 }
