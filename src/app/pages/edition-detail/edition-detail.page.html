@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
-  <ion-toolbar *ngIf="editionData$ | async as data">
-    <ion-title>{{ data.title }}</ion-title>
+  <ion-toolbar>
+    <ion-title>Work Details</ion-title>
     <ion-buttons slot="start">
       <ion-back-button text="Editions"></ion-back-button>
     </ion-buttons>
@@ -9,8 +9,8 @@
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
-    <ion-toolbar *ngIf="editionData$ | async as data">
-      <ion-title size="large">{{ data.title }}</ion-title>
+    <ion-toolbar>
+      <ion-title size="large">Work Details</ion-title>
     </ion-toolbar>
   </ion-header>
 
