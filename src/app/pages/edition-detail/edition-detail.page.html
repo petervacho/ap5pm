@@ -27,16 +27,18 @@
       <ion-card-subtitle *ngIf="data.subtitle">{{ data.subtitle }}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
+      <!-- Rating information -->
       <ng-container *ngIf="ratingsData$ | async as ratingsData">
-        <p>
-          <ng-container *ngIf="starIcons$ | async as starIcons">
+        <ion-item>
+          <div slot="start" *ngIf="starIcons$ | async as starIcons">
             <ng-container *ngFor="let iconName of starIcons">
               <ion-icon [name]="iconName"></ion-icon>
             </ng-container>
-          </ng-container>
+          </div>
 
-          {{ ratingsData.summary.average.toFixed(2) }} / 5
-        </p>
+          <ion-label>{{ ratingsData.summary.average.toFixed(2) }} / 5</ion-label>
+          <ion-note slot="end">{{ ratingsData.summary.count }} ratings</ion-note>
+        </ion-item>
       </ng-container>
 
       <ion-list>
