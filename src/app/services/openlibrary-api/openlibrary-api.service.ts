@@ -9,6 +9,7 @@ import { WorkData } from 'src/app/models/work.model';
 import { WorkSearchData } from 'src/app/models/work_search.model';
 import { EditionBatchData } from 'src/app/models/edition_batch.model';
 import { map } from 'rxjs';
+import { WorkRatingsData } from 'src/app/models/work_ratings.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +42,11 @@ export class OpenlibraryApiService {
     );
 
     return response$.pipe(map((rawData) => new FormattedEditionData(rawData)));
+  }
+
+  get_work_ratings$(work_key: string) {
+    return this.http.get<WorkRatingsData>(
+      `${environment.baseUrl}/works/${work_key}/ratings.json`,
+    );
   }
 }
