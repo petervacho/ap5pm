@@ -15,7 +15,7 @@
 
   <ion-list *ngIf="items$ | async; let items">
     <ion-item *ngFor="let item of items" (click)="redirectListEditions(item)" routerLink="#">
-      <ion-icon name="newspaper-outline" slot="start"></ion-icon>
+      <ion-icon name="library-outline" slot="start"></ion-icon>
       <ion-label>
         <h2>{{ item["title"] }}</h2>
         <!-- prettier-ignore -->
