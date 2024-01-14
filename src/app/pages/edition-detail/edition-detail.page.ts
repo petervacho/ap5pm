@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom, from, map, of } from 'rxjs';
-import {
-  EditionData,
-  FormattedEditionData,
-} from 'src/app/models/edition.model';
+import { FormattedEditionData } from 'src/app/models/edition.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -16,6 +13,8 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 export class EditionDetailPage implements OnInit {
   private editionId$: Observable<string>;
   public editionData$: Observable<FormattedEditionData>;
+
+  public isStarFilled: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,5 +45,9 @@ export class EditionDetailPage implements OnInit {
     return await firstValueFrom(
       this.openLibraryApiService.get_edition$(editionId),
     );
+  }
+
+  async toggleStar() {
+    this.isStarFilled = !this.isStarFilled;
   }
 }

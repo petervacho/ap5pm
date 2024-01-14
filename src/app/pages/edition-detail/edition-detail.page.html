@@ -4,6 +4,12 @@
     <ion-buttons slot="start">
       <ion-back-button text="Editions"></ion-back-button>
     </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="toggleStar()" aria-label="Favorite">
+        <ion-icon [name]="isStarFilled ? 'star' : 'star-outline'" [style.color]="'yellow'" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
