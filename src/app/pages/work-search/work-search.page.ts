@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
+import { SettingsPage } from '../settings/settings.page';
 
 @Component({
   selector: 'app-work-search',
@@ -22,6 +24,7 @@ export class WorkSearchPage implements OnInit {
   constructor(
     private openLibraryApiService: OpenlibraryApiService,
     private sharedService: SharedService,
+    private modalCtrl: ModalController,
     private router: Router,
   ) { }
 
@@ -64,5 +67,13 @@ export class WorkSearchPage implements OnInit {
     this.sharedService.setData('workDetail', item);
     const work_id = item.key.slice('/works/'.length);
     this.router.navigate(['/edition-list/', work_id]);
+  }
+
+  async openSettings() {
+    const modal = await this.modalCtrl.create({ component: SettingsPage });
+    await modal.present();
+
+    // Reset the list data (start from page 1 again)
+    modal.onWillDismiss().then((_) => this.onSearchTermChanged());
   }
 }

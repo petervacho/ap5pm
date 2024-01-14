@@ -28,6 +28,10 @@ const routes: Routes = [
         (m) => m.EditionDetailPageModule,
       ),
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
+  },
 ];
 
 @NgModule({
