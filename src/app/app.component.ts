@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CurrentTheme, ThemeService } from './services/theme/theme.service';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private themeService: ThemeService) {
+    themeService.updatePageTheme();
+  }
 }

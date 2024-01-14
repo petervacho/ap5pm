@@ -14,4 +14,20 @@
       <ion-title size="large">settings</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-item>
+    <ion-label slot="start">Appearance</ion-label>
+    <ion-segment slot="end" style="margin-left: 0px" [(ngModel)]="currentThemeSetting"
+      (ionChange)="onThemeChange($event)">
+      <ion-segment-button value="auto">
+        <ion-label>Auto</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="dark">
+        <ion-label>Dark</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="light">
+        <ion-label>Light</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-item>
 </ion-content>
