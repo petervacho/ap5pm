@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, firstValueFrom, from, map, of } from 'rxjs';
+import { Observable, firstValueFrom, from, map, of, switchMap } from 'rxjs';
 import { FormattedEditionData } from 'src/app/models/edition.model';
+import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -20,6 +21,7 @@ export class EditionDetailPage implements OnInit {
     private route: ActivatedRoute,
     private openLibraryApiService: OpenlibraryApiService,
     private sharedService: SharedService,
+    private favoritesService: FavoritesService,
   ) {
     const editionData =
       sharedService.getData<FormattedEditionData>('editionData');
@@ -35,6 +37,13 @@ export class EditionDetailPage implements OnInit {
       );
       this.editionData$ = from(this.getEditionData()); // converts Promise to Observable
     }
+
+    // Check whether this edition is in the favorite list
+    this.editionId$
+      .pipe(
+        switchMap((editionId) => from(favoritesService.isFavorite(editionId))),
+      )
+      .subscribe((isFavorite) => (this.isStarFilled = isFavorite));
   }
 
   ngOnInit() { }
@@ -49,5 +58,7 @@ export class EditionDetailPage implements OnInit {
 
   async toggleStar() {
     this.isStarFilled = !this.isStarFilled;
+    const editionId = await firstValueFrom(this.editionId$);
+    await this.favoritesService.addFavorite(editionId);
   }
 }
