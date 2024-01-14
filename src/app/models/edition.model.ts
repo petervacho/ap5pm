@@ -124,8 +124,51 @@ export class FormattedEditionData {
     return this.rawData.title;
   }
 
+  get subtitle(): string | null {
+    return this.rawData.subtitle != undefined ? this.rawData.subtitle : null;
+  }
+
+  get physical_format(): string | null {
+    return this.rawData.physical_format != undefined
+      ? this.rawData.physical_format
+      : null;
+  }
+
+  get physical_dimensions(): string | null {
+    return this.rawData.physical_dimensions != undefined
+      ? this.rawData.physical_dimensions
+      : null;
+  }
+
+  get has_physical_data(): boolean {
+    return Boolean(this.physical_format || this.physical_dimensions);
+  }
+
+  get number_of_pages(): string {
+    if (this.rawData.number_of_pages == undefined) {
+      return 'N/A';
+    }
+    return this.rawData.number_of_pages.toString();
+  }
+
   get edition_id(): string {
     return this.rawData.key.slice('/books/'.length);
+  }
+
+  get isbn_10(): string {
+    if (!this.checkList(this.rawData.isbn_10)) {
+      return 'N/A';
+    }
+
+    return this.rawData.isbn_10.join(', ');
+  }
+
+  get isbn_13(): string {
+    if (!this.checkList(this.rawData.isbn_13)) {
+      return 'N/A';
+    }
+
+    return this.rawData.isbn_13.join(', ');
   }
 
   get publishers(): string {
@@ -142,6 +185,14 @@ export class FormattedEditionData {
     return this.rawData.publish_date != undefined
       ? this.rawData.publish_date
       : 'N/A';
+  }
+
+  // IDs of all works this edition is associated with
+  // (usually only one)
+  get work_ids(): string[] {
+    return this.rawData.works
+      .map((item) => item.key) // for some reason, the items are in { key = ... }
+      .map((item) => item.slice('/works/'.length));
   }
 
   get languages(): string {

@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Work Details</ion-title>
+    <ion-title>Edition Details</ion-title>
     <ion-buttons slot="start">
       <ion-back-button text="Editions"></ion-back-button>
     </ion-buttons>
@@ -16,17 +16,100 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Work Details</ion-title>
+      <ion-title size="large">Edition Details</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-card *ngIf="editionData$ | async as data">
-    <img [src]="data.get_thumbnail('L')" alt="Book cover" />
+    <ion-img [src]="data.get_thumbnail('L')" alt="Book cover"></ion-img>
     <ion-card-header>
       <ion-card-title>{{ data.title }}</ion-card-title>
-      <!-- <ion-card-subtitle>{{ data.authors }}</ion-card-subtitle> -->
+      <ion-card-subtitle *ngIf="data.subtitle">{{ data.subtitle }}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
+      <ng-container *ngIf="ratingsData$ | async as ratingsData">
+        <p>
+          <ng-container *ngIf="starIcons$ | async as starIcons">
+            <ng-container *ngFor="let iconName of starIcons">
+              <ion-icon [name]="iconName"></ion-icon>
+            </ng-container>
+          </ng-container>
+
+          {{ ratingsData.summary.average.toFixed(2) }} / 5
+        </p>
+      </ng-container>
+
+      <ion-list>
+        <ion-item>
+          <ion-icon slot="start" name="calendar-outline"></ion-icon>
+          <ion-label>Publish Date</ion-label>
+          <ion-note slot="end">{{ data.publish_date }}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon slot="start" name="language-outline"></ion-icon>
+          <ion-label>Language</ion-label>
+          <ion-note slot="end">{{ data.languages }}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon slot="start" name="book-outline"></ion-icon>
+          <ion-label>Pages</ion-label>
+          <ion-note slot="end">{{ data.number_of_pages }}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon slot="start" name="business-outline"></ion-icon>
+          <ion-label>Publisher</ion-label>
+          <ion-note slot="end">{{ data.publishers }}</ion-note>
+        </ion-item>
+
+        <ion-item *ngIf="data.isbn_13 != 'N/A'">
+          <ion-icon slot="start" name="information-outline"></ion-icon>
+          <ion-label>ISBN 13</ion-label>
+          <ion-note slot="end">{{ data.isbn_13 }}</ion-note>
+        </ion-item>
+
+        <ion-item *ngIf="data.isbn_10 != 'N/A'">
+          <ion-icon slot="start" name="information-outline"></ion-icon>
+          <ion-label>ISBN 10</ion-label>
+          <ion-note slot="end">{{ data.isbn_10 }}</ion-note>
+        </ion-item>
+
+        <ion-item *ngIf="data.physical_format">
+          <ion-icon slot="start" name="cube-outline"></ion-icon>
+          <ion-label>Format</ion-label>
+          <ion-note slot="end">{{ data.physical_format }}</ion-note>
+        </ion-item>
+
+        <ion-item *ngIf="data.physical_dimensions">
+          <ion-icon slot="start" name="expand-outline"></ion-icon>
+          <ion-label>Dimensions</ion-label>
+          <ion-note slot="end">{{ data.physical_dimensions }}</ion-note>
+        </ion-item>
+
+        <!-- Edition only has 1 work listed (usually the case) -->
+        <ng-container *ngIf="data.work_ids.length == 1">
+          <ion-item [href]="'/edition-list/' + data.work_ids[0]">
+            <ion-icon slot="start" name="library-outline"></ion-icon>
+            <ion-label>Show Associated Work</ion-label>
+          </ion-item>
+        </ng-container>
+        <!-- Edition has multiple works listed -->
+        <ion-item-group *ngIf="data.work_ids.length > 1">
+          <ion-item-divider>
+            <ion-icon slot="start" name="library-outline"></ion-icon>
+            <ion-label>Associated Works</ion-label>
+          </ion-item-divider>
+
+          <ion-item *ngFor="let work_id of data.work_ids">
+            <ion-icon slot="start" name="link-outline"></ion-icon>
+            <ion-label>
+              <a [href]="'/edition-list/' + work_id">{{ work_id }}</a>
+            </ion-label>
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
       <pre><code>{{ data.rawData | json }}</code></pre>
     </ion-card-content>
   </ion-card>
