@@ -26,9 +26,9 @@
       <ion-label>
         <h2>{{ edition.title }}</h2>
         <p>
-          <span *ngif="edition.publishers.length > 0"><b>Publisher: </b>{{ edition.publishers.join(', ') }},
+          <span *ngIf="edition.publishers.length > 0"><b>Publisher: </b>{{ edition.publishers.join(', ') }},
           </span>
-          <span *ngif="edition.publish_date"><b>Publish date: </b>{{ edition.publish_date }},
+          <span *ngIf="edition.publish_date"><b>Publish date: </b>{{ edition.publish_date }},
           </span>
           <span *ngIf="edition.languages.length > 0"><b>Language: </b>{{ edition.languages.join(', ') }}</span>
         </p>
