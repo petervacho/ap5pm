@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
-import { SharedService } from 'src/app/services/shared/shared.service';
 import { SettingsPage } from '../settings/settings.page';
 import { SearchDataModel } from 'src/app/models/custom/search.model';
 
@@ -22,9 +20,7 @@ export class SearchPage implements OnInit {
 
   constructor(
     private openLibraryApiService: OpenlibraryApiService,
-    private sharedService: SharedService,
     private modalCtrl: ModalController,
-    private router: Router,
   ) { }
 
   ngOnInit(): void {

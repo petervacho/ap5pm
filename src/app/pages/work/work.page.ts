@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
   Observable,
@@ -33,7 +33,6 @@ export class WorkPage implements OnInit {
     private route: ActivatedRoute,
     private openLibraryApiService: OpenlibraryApiService,
     private sharedService: SharedService,
-    private router: Router,
   ) {
     const workDetail = sharedService.getData<WorkModel>('workDetail');
     if (workDetail != null) {
@@ -54,7 +53,7 @@ export class WorkPage implements OnInit {
     this.loadEditionBatch();
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   // Obtain the work's name from API (only used if we weren't able to get it from the shared service)
   private async getWorkName() {
