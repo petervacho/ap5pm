@@ -8,11 +8,11 @@ import { SettingsPage } from '../settings/settings.page';
 import { SearchDataModel } from 'src/app/models/custom/search.model';
 
 @Component({
-  selector: 'app-work-search',
-  templateUrl: 'work-search.page.html',
-  styleUrls: ['work-search.page.scss'],
+  selector: 'search',
+  templateUrl: 'search.component.html',
+  styleUrls: ['search.component.scss'],
 })
-export class WorkSearchPage implements OnInit {
+export class search implements OnInit {
   public searchTerm: string = 'Tolkien';
 
   private itemsSubject = new BehaviorSubject<SearchDataModel[]>([]);

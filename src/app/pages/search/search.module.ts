@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { WorkSearchPage } from './work-search.page';
+import { SearchPage } from './search.page';
 
-import { WorkSearchPageRoutingModule } from './work-search-routing.module';
+import { SearchPageRoutingModule } from './search-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    WorkSearchPageRoutingModule,
+    SearchPageRoutingModule,
   ],
-  declarations: [WorkSearchPage],
+  declarations: [SearchPage],
 })
-export class WorkSearchPageModule { }
+export class SearchPageModule { }

@@ -4,14 +4,14 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'work-search',
+    redirectTo: 'search',
     pathMatch: 'full',
   },
   {
-    path: 'work-search',
+    path: 'search',
     loadChildren: () =>
-      import('./pages/work-search/work-search.module').then(
-        (m) => m.WorkSearchPageModule,
+      import('./pages/search/search.module').then(
+        (m) => m.SearchPageModule,
       ),
   },
   {
