@@ -17,7 +17,7 @@ export class EditionPage implements OnInit {
   editionData$: Observable<EditionModel>;
   workData$: Observable<WorkModel | null>;
 
-  isStarFilled: boolean = false;
+  isFavorite: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,7 +46,7 @@ export class EditionPage implements OnInit {
       .pipe(
         switchMap((editionId) => from(favoritesService.isFavorite(editionId))),
       )
-      .subscribe((isFavorite) => (this.isStarFilled = isFavorite));
+      .subscribe((isFavorite) => (this.isFavorite = isFavorite));
   }
 
   ngOnInit() { }
@@ -72,8 +72,8 @@ export class EditionPage implements OnInit {
     return await firstValueFrom(this.openLibraryApiService.get_work$(workId));
   }
 
-  async toggleStar() {
-    this.isStarFilled = !this.isStarFilled;
+  async toggleFavorite() {
+    this.isFavorite = !this.isFavorite;
     const editionId = await firstValueFrom(this.editionId$);
     await this.favoritesService.addFavorite(editionId);
   }
