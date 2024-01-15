@@ -14,11 +14,11 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibr
 import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
-  selector: 'app-edition-list',
-  templateUrl: './edition-list.page.html',
-  styleUrls: ['./edition-list.page.scss'],
+  selector: 'app-work',
+  templateUrl: './work.page.html',
+  styleUrls: ['./work.page.scss'],
 })
-export class EditionListPage implements OnInit {
+export class WorkPage implements OnInit {
   private workId$: Observable<string>;
   public workName$: Observable<string>;
 
@@ -54,7 +54,7 @@ export class EditionListPage implements OnInit {
     this.loadEditionBatch();
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   // Obtain the work's name from API (only used if we weren't able to get it from the shared service)
   private async getWorkName() {

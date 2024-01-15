@@ -94,7 +94,7 @@
 
         <!-- Edition only has 1 work listed (usually the case) -->
         <ng-container *ngIf="data.work_ids.length == 1">
-          <ion-item [href]="'/edition-list/' + data.work_ids[0]">
+          <ion-item [href]="'/work/' + data.work_ids[0]">
             <ion-icon slot="start" name="library-outline"></ion-icon>
             <ion-label>Show Associated Work</ion-label>
           </ion-item>
@@ -109,7 +109,7 @@
           <ion-item *ngFor="let work_id of data.work_ids">
             <ion-icon slot="start" name="link-outline"></ion-icon>
             <ion-label>
-              <a [href]="'/edition-list/' + work_id">{{ work_id }}</a>
+              <a [href]="'/work/' + work_id">{{ work_id }}</a>
             </ion-label>
           </ion-item>
         </ion-item-group>

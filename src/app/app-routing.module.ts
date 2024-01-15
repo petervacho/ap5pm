@@ -15,10 +15,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'edition-list/:work_id',
+    path: 'work/:work_id',
     loadChildren: () =>
-      import('./pages/edition-list/edition-list.module').then(
-        (m) => m.EditionListPageModule,
+      import('./pages/work/work.module').then(
+        (m) => m.WorkPageModule,
       ),
   },
   {

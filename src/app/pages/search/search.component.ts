@@ -26,7 +26,7 @@ export class search implements OnInit {
     private sharedService: SharedService,
     private modalCtrl: ModalController,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.search();
@@ -65,7 +65,7 @@ export class search implements OnInit {
   // so that it can be accessed from the detail page. This runs before routerLink
   redirectListEditions(item: SearchDataModel) {
     this.sharedService.setData('workDetail', item);
-    this.router.navigate(['/edition-list/', item.workId.toString()]);
+    this.router.navigate(['/work/', item.workId.toString()]);
   }
 
   async openSettings() {
