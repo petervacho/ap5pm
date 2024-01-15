@@ -1,20 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  Observable,
-  first,
-  firstValueFrom,
-  from,
-  map,
-  of,
-  switchMap,
-} from 'rxjs';
-import { FormattedEditionData } from 'src/app/models/edition.model';
-import {
-  WorkRatingsData,
-  buildRatingsDataFromSearch,
-} from 'src/app/models/work_ratings.model';
-import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
+import { Observable, firstValueFrom, from, map, of, switchMap } from 'rxjs';
+import { EditionModel } from 'src/app/models/custom/edition.model';
+import { WorkModel } from 'src/app/models/custom/work.model';
 import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
@@ -26,8 +14,8 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 })
 export class EditionDetailPage implements OnInit {
   private editionId$: Observable<string>;
-  public editionData$: Observable<FormattedEditionData>;
-  public ratingsData$: Observable<WorkRatingsData | null>;
+  public editionData$: Observable<EditionModel>;
+  public workData$: Observable<WorkModel | null>;
   public starIcons$: Observable<string[]>;
 
   public isStarFilled: boolean = false;
@@ -38,11 +26,10 @@ export class EditionDetailPage implements OnInit {
     private sharedService: SharedService,
     private favoritesService: FavoritesService,
   ) {
-    const editionData =
-      sharedService.getData<FormattedEditionData>('editionData');
+    const editionData = sharedService.getData<EditionModel>('editionData');
     if (editionData != null) {
       // Create an observable which only emits a single constant value
-      this.editionId$ = of(editionData.edition_id);
+      this.editionId$ = of(editionData.editionId);
       this.editionData$ = of(editionData);
     } else {
       // Angular doesn't expose parameters immediately, it might take a while until they're available.
@@ -53,13 +40,7 @@ export class EditionDetailPage implements OnInit {
       this.editionData$ = from(this.getEditionData()); // converts Promise to Observable
     }
 
-    const workDetail =
-      sharedService.getData<WorkSearchDataDetails>('workDetail');
-    if (workDetail != null) {
-      this.ratingsData$ = of(buildRatingsDataFromSearch(workDetail));
-    } else {
-      this.ratingsData$ = from(this.getRatingsData());
-    }
+    this.workData$ = from(this.getWorkData());
 
     // Check whether this edition is in the favorite list
     this.editionId$
@@ -71,13 +52,16 @@ export class EditionDetailPage implements OnInit {
     // Helper variable for the view, to figure out what stars to draw when showing the rating.
     //
     // Returns a list of 5 icon names.
-    this.starIcons$ = this.ratingsData$.pipe(
-      map((ratingsData): string[] => {
-        if (ratingsData == null) {
+    this.starIcons$ = this.workData$.pipe(
+      map((workData): string[] => {
+        if (workData == null) {
           return [];
         }
 
-        const avgRating = ratingsData.summary.average;
+        const avgRating = workData.rating_average;
+        if (avgRating == null) {
+          return [];
+        }
         const floored = Math.floor(avgRating);
         const remainder = avgRating - floored;
 
@@ -110,16 +94,15 @@ export class EditionDetailPage implements OnInit {
   ngOnInit() { }
 
   // Obtain the edition data from API (only used if we weren't able to get it from the shared service)
-  private async getEditionData(): Promise<FormattedEditionData> {
+  private async getEditionData(): Promise<EditionModel> {
     const editionId = await firstValueFrom(this.editionId$);
     return await firstValueFrom(
       this.openLibraryApiService.get_edition$(editionId),
     );
   }
 
-  // Obtain the ratings data from API (only used when we weren't
-  // able to get it from the shared service)
-  private async getRatingsData(): Promise<WorkRatingsData | null> {
+  // Obtain the work data from API
+  private async getWorkData(): Promise<WorkModel | null> {
     const editionData = await firstValueFrom(this.editionData$);
     // This will only work when there's exactly 1 work, so we can obtain
     // the ratings from that work for this edition. If this edition
@@ -128,9 +111,7 @@ export class EditionDetailPage implements OnInit {
       return null;
     }
     const workId = editionData.work_ids[0];
-    return await firstValueFrom(
-      this.openLibraryApiService.get_work_ratings$(workId),
-    );
+    return await firstValueFrom(this.openLibraryApiService.get_work$(workId));
   }
 
   async toggleStar() {

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
-import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { SettingsPage } from '../settings/settings.page';
+import { SearchDataModel } from 'src/app/models/custom/search.model';
 
 @Component({
   selector: 'app-work-search',
@@ -15,8 +15,8 @@ import { SettingsPage } from '../settings/settings.page';
 export class WorkSearchPage implements OnInit {
   public searchTerm: string = 'Tolkien';
 
-  private itemsSubject = new BehaviorSubject<WorkSearchDataDetails[]>([]);
-  public items$: Observable<WorkSearchDataDetails[]> =
+  private itemsSubject = new BehaviorSubject<SearchDataModel[]>([]);
+  public items$: Observable<SearchDataModel[]> =
     this.itemsSubject.asObservable();
   public pageNumber: number = 1;
   private limit: number = 20;
@@ -40,7 +40,7 @@ export class WorkSearchPage implements OnInit {
         this.limit,
       ),
     );
-    this.itemsSubject.next([...this.itemsSubject.value, ...result.docs]);
+    this.itemsSubject.next([...this.itemsSubject.value, ...result.data]);
   }
 
   onSearchTermChanged() {
@@ -63,10 +63,9 @@ export class WorkSearchPage implements OnInit {
 
   // Store the data about a work that was just clicked on to the service,
   // so that it can be accessed from the detail page. This runs before routerLink
-  redirectListEditions(item: WorkSearchDataDetails) {
+  redirectListEditions(item: SearchDataModel) {
     this.sharedService.setData('workDetail', item);
-    const work_id = item.key.slice('/works/'.length);
-    this.router.navigate(['/edition-list/', work_id]);
+    this.router.navigate(['/edition-list/', item.workId.toString()]);
   }
 
   async openSettings() {

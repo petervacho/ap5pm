@@ -21,24 +21,26 @@
   </ion-header>
 
   <ion-card *ngIf="editionData$ | async as data">
-    <ion-img [src]="data.get_thumbnail('L')" alt="Book cover"></ion-img>
+    <ion-img [src]="data.getThumbnail('L')" alt="Book cover"></ion-img>
     <ion-card-header>
       <ion-card-title>{{ data.title }}</ion-card-title>
       <ion-card-subtitle *ngIf="data.subtitle">{{ data.subtitle }}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <!-- Rating information -->
-      <ng-container *ngIf="ratingsData$ | async as ratingsData">
-        <ion-item>
-          <div slot="start" *ngIf="starIcons$ | async as starIcons">
-            <ng-container *ngFor="let iconName of starIcons">
-              <ion-icon [name]="iconName"></ion-icon>
-            </ng-container>
-          </div>
+      <ng-container *ngIf="workData$ | async as workData">
+        <ng-container *ngIf="workData.rating_average != null">
+          <ion-item>
+            <div slot="start" *ngIf="starIcons$ | async as starIcons">
+              <ng-container *ngFor="let iconName of starIcons">
+                <ion-icon [name]="iconName"></ion-icon>
+              </ng-container>
+            </div>
 
-          <ion-label>{{ ratingsData.summary.average.toFixed(2) }} / 5</ion-label>
-          <ion-note slot="end">{{ ratingsData.summary.count }} ratings</ion-note>
-        </ion-item>
+            <ion-label>{{ workData.rating_average.toFixed(2) }} / 5</ion-label>
+            <ion-note slot="end">{{ workData.rating_count }} ratings</ion-note>
+          </ion-item>
+        </ng-container>
       </ng-container>
 
       <ion-list>
@@ -57,7 +59,7 @@
         <ion-item>
           <ion-icon slot="start" name="book-outline"></ion-icon>
           <ion-label>Pages</ion-label>
-          <ion-note slot="end">{{ data.number_of_pages }}</ion-note>
+          <ion-note slot="end">{{ data.number_of_pages || "N/A" }}</ion-note>
         </ion-item>
 
         <ion-item>
@@ -66,13 +68,13 @@
           <ion-note slot="end">{{ data.publishers }}</ion-note>
         </ion-item>
 
-        <ion-item *ngIf="data.isbn_13 != 'N/A'">
+        <ion-item *ngIf="data.isbn_13">
           <ion-icon slot="start" name="information-outline"></ion-icon>
           <ion-label>ISBN 13</ion-label>
           <ion-note slot="end">{{ data.isbn_13 }}</ion-note>
         </ion-item>
 
-        <ion-item *ngIf="data.isbn_10 != 'N/A'">
+        <ion-item *ngIf="data.isbn_10">
           <ion-icon slot="start" name="information-outline"></ion-icon>
           <ion-label>ISBN 10</ion-label>
           <ion-note slot="end">{{ data.isbn_10 }}</ion-note>
@@ -112,7 +114,7 @@
           </ion-item>
         </ion-item-group>
       </ion-list>
-      <pre><code>{{ data.rawData | json }}</code></pre>
+      <!-- <pre><code>{{ data.raw | json }}</code></pre> -->
     </ion-card-content>
   </ion-card>
 </ion-content>

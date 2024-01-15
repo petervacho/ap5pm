@@ -17,12 +17,16 @@
     <ion-item *ngFor="let item of items" (click)="redirectListEditions(item)" routerLink="#">
       <ion-icon name="library-outline" slot="start"></ion-icon>
       <ion-label>
-        <h2>{{ item["title"] }}</h2>
-        <!-- prettier-ignore -->
+        <h2>{{ item.title }}</h2>
         <p>
-          <b>Author: </b>{{ item["author_name"] }},
-          <b>First Published: </b>{{ item["first_publish_year"] }},
-          <b>Editions: </b>{{ item["edition_count"] }}
+          <span *ngIf="item.author_names.length > 0">
+            <b>Author: </b>{{ item.author_names.join(", ") }},&nbsp;
+          </span>
+          <span *ngIf="item.first_publish_year"><b>First Published: </b>{{ item.first_publish_year }},&nbsp;
+          </span>
+          <span *ngIf="item.edition_count">
+            <b>Editions: </b>{{ item.edition_count }}
+          </span>
         </p>
       </ion-label>
     </ion-item>

@@ -8,8 +8,8 @@ import {
   map,
   of,
 } from 'rxjs';
-import { FormattedEditionData } from 'src/app/models/edition.model';
-import { WorkSearchDataDetails } from 'src/app/models/work_search.model';
+import { EditionModel } from 'src/app/models/custom/edition.model';
+import { WorkModel } from 'src/app/models/custom/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
@@ -25,10 +25,8 @@ export class EditionListPage implements OnInit {
   // Pagination stuff for the editions infinite-scroll
   private offset: number = 0;
   private keepFetching: boolean = true;
-  private fetchedEditionsSubject = new BehaviorSubject<FormattedEditionData[]>(
-    [],
-  );
-  public fetchedEditions$: Observable<FormattedEditionData[]> =
+  private fetchedEditionsSubject = new BehaviorSubject<EditionModel[]>([]);
+  public fetchedEditions$: Observable<EditionModel[]> =
     this.fetchedEditionsSubject.asObservable();
 
   constructor(
@@ -37,11 +35,10 @@ export class EditionListPage implements OnInit {
     private sharedService: SharedService,
     private router: Router,
   ) {
-    const workDetail =
-      sharedService.getData<WorkSearchDataDetails>('workDetail');
+    const workDetail = sharedService.getData<WorkModel>('workDetail');
     if (workDetail != null) {
       // Create an observable which only emits a single constant value
-      this.workId$ = of(workDetail.key.slice('/works/'.length));
+      this.workId$ = of(workDetail.workId);
       this.workName$ = of(workDetail.title);
     } else {
       // Angular doesn't expose parameters immediately, it might take a while until they're available.
@@ -78,30 +75,16 @@ export class EditionListPage implements OnInit {
       this.openLibraryApiService.get_edition_batch$(workId, this.offset),
     );
 
-    if (response.links.next == undefined) {
+    const offset = response.getNextOffset();
+    if (offset == null) {
       this.keepFetching = false;
     } else {
-      // Figure out the next offset
-      const next_url = new URL(
-        response.links.next as string,
-        'http://example.com', // provide a base URL, so it can be a valid URL
-      );
-      const offsetValue = next_url.searchParams.get('offset');
-
-      if (offsetValue == null) {
-        console.error("The next URL didn't contain an offset query param");
-        this.keepFetching = false;
-      } else {
-        this.offset = parseInt(offsetValue, 10);
-      }
+      this.offset = offset;
     }
 
-    const formattedEntries = response.entries.map(
-      (entry) => new FormattedEditionData(entry),
-    );
     this.fetchedEditionsSubject.next([
       ...this.fetchedEditionsSubject.value,
-      ...formattedEntries,
+      ...response.data,
     ]);
   }
 
@@ -117,8 +100,8 @@ export class EditionListPage implements OnInit {
     }
   }
 
-  redirectEdition(item: FormattedEditionData) {
+  redirectEdition(item: EditionModel) {
     this.sharedService.setData('editionDetail', item);
-    this.router.navigate(['/edition-detail/', item.edition_id]);
+    this.router.navigate(['/edition-detail/', item.editionId.toString()]);
   }
 }
