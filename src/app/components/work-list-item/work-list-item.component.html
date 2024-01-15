@@ -1,0 +1,16 @@
+<ion-item (click)="redirectToWork()" routerLink="#">
+  <ion-icon name="library-outline" slot="start"></ion-icon>
+  <ion-label>
+    <h2>{{ work.title }}</h2>
+    <p>
+      <span *ngIf="work.author_names.length > 0">
+        <b>Author: </b>{{ work.author_names.join(", ") }},&nbsp;
+      </span>
+      <span *ngIf="work.first_publish_year"><b>First Published: </b>{{ work.first_publish_year }},&nbsp;
+      </span>
+      <span *ngIf="work.edition_count">
+        <b>Editions: </b>{{ work.edition_count }}
+      </span>
+    </p>
+  </ion-label>
+</ion-item>

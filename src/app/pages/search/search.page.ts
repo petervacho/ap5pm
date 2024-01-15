@@ -60,13 +60,6 @@ export class SearchPage implements OnInit {
     this.search().then(() => event.target.complete());
   }
 
-  // Store the data about a work that was just clicked on to the service,
-  // so that it can be accessed from the detail page. This runs before routerLink
-  redirectListEditions(item: SearchDataModel) {
-    this.sharedService.setData('workDetail', item);
-    this.router.navigate(['/work/', item.workId.toString()]);
-  }
-
   async openSettings() {
     const modal = await this.modalCtrl.create({ component: SettingsPage });
     await modal.present();

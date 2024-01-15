@@ -14,22 +14,7 @@
   <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchTermChanged()"></ion-searchbar>
 
   <ion-list *ngIf="items$ | async; let items">
-    <ion-item *ngFor="let item of items" (click)="redirectListEditions(item)" routerLink="#">
-      <ion-icon name="library-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>{{ item.title }}</h2>
-        <p>
-          <span *ngIf="item.author_names.length > 0">
-            <b>Author: </b>{{ item.author_names.join(", ") }},&nbsp;
-          </span>
-          <span *ngIf="item.first_publish_year"><b>First Published: </b>{{ item.first_publish_year }},&nbsp;
-          </span>
-          <span *ngIf="item.edition_count">
-            <b>Editions: </b>{{ item.edition_count }}
-          </span>
-        </p>
-      </ion-label>
-    </ion-item>
+    <app-work-list-item *ngFor="let item of items" [work]="item"></app-work-list-item>
   </ion-list>
 
   <ion-infinite-scroll (ionInfinite)="loadData($event)">
