@@ -46,6 +46,6 @@ export class SettingsPage implements OnInit {
   }
 
   async clearFavorites() {
-    this.favoritesService.setFavorites(new Set([]));
+    await this.favoritesService.setFavorites(new Set([]));
   }
 }
