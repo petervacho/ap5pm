@@ -20,13 +20,13 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 })
 export class WorkPage implements OnInit {
   private workId$: Observable<string>;
-  public workName$: Observable<string>;
+  workName$: Observable<string>;
 
   // Pagination stuff for the editions infinite-scroll
   private offset: number = 0;
   private keepFetching: boolean = true;
   private fetchedEditionsSubject = new BehaviorSubject<EditionModel[]>([]);
-  public fetchedEditions$: Observable<EditionModel[]> =
+  fetchedEditions$: Observable<EditionModel[]> =
     this.fetchedEditionsSubject.asObservable();
 
   constructor(

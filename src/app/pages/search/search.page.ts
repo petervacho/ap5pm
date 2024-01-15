@@ -13,12 +13,11 @@ import { SearchDataModel } from 'src/app/models/custom/search.model';
   styleUrls: ['search.page.scss'],
 })
 export class SearchPage implements OnInit {
-  public searchTerm: string = 'Tolkien';
+  searchTerm: string = 'Tolkien';
 
   private itemsSubject = new BehaviorSubject<SearchDataModel[]>([]);
-  public items$: Observable<SearchDataModel[]> =
-    this.itemsSubject.asObservable();
-  public pageNumber: number = 1;
+  items$: Observable<SearchDataModel[]> = this.itemsSubject.asObservable();
+  private pageNumber: number = 1;
   private limit: number = 20;
 
   constructor(
@@ -26,7 +25,7 @@ export class SearchPage implements OnInit {
     private sharedService: SharedService,
     private modalCtrl: ModalController,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.search();

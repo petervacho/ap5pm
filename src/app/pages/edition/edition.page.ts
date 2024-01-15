@@ -14,11 +14,11 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 })
 export class EditionPage implements OnInit {
   private editionId$: Observable<string>;
-  public editionData$: Observable<EditionModel>;
-  public workData$: Observable<WorkModel | null>;
-  public starIcons$: Observable<string[]>;
+  editionData$: Observable<EditionModel>;
+  workData$: Observable<WorkModel | null>;
+  starIcons$: Observable<string[]>;
 
-  public isStarFilled: boolean = false;
+  isStarFilled: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
