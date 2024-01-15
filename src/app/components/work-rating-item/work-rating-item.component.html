@@ -1,0 +1,12 @@
+<ng-container *ngIf="work.rating_average">
+  <ion-item>
+    <div slot="start" *ngIf="getStarIcons() as starIcons">
+      <ng-container *ngFor="let iconName of starIcons">
+        <ion-icon [name]="iconName"></ion-icon>
+      </ng-container>
+    </div>
+
+    <ion-label>{{ work.rating_average.toFixed(2) }} / 5</ion-label>
+    <ion-note slot="end">{{ work.rating_count }} ratings</ion-note>
+  </ion-item>
+</ng-container>

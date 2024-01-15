@@ -27,22 +27,7 @@
       <ion-card-subtitle *ngIf="data.subtitle">{{ data.subtitle }}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <!-- Rating information -->
-      <ng-container *ngIf="workData$ | async as workData">
-        <ng-container *ngIf="workData.rating_average != null">
-          <ion-item>
-            <div slot="start" *ngIf="starIcons$ | async as starIcons">
-              <ng-container *ngFor="let iconName of starIcons">
-                <ion-icon [name]="iconName"></ion-icon>
-              </ng-container>
-            </div>
-
-            <ion-label>{{ workData.rating_average.toFixed(2) }} / 5</ion-label>
-            <ion-note slot="end">{{ workData.rating_count }} ratings</ion-note>
-          </ion-item>
-        </ng-container>
-      </ng-container>
-
+      <app-work-rating-item *ngIf="workData$ | async as workData" [work]="workData"></app-work-rating-item>
       <ion-list>
         <ion-item>
           <ion-icon slot="start" name="calendar-outline"></ion-icon>

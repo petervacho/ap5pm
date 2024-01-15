@@ -7,14 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { EditionDetailPageRoutingModule } from './edition-routing.module';
 
 import { EditionPage } from './edition.page';
+import { WorkRatingItemComponent } from 'src/app/components/work-rating-item/work-rating-item.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    EditionDetailPageRoutingModule
+    EditionDetailPageRoutingModule,
   ],
-  declarations: [EditionPage]
+  declarations: [EditionPage, WorkRatingItemComponent],
 })
-export class EditionDetailPageModule {}
+export class EditionDetailPageModule { }

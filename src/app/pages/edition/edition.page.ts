@@ -16,7 +16,6 @@ export class EditionPage implements OnInit {
   private editionId$: Observable<string>;
   editionData$: Observable<EditionModel>;
   workData$: Observable<WorkModel | null>;
-  starIcons$: Observable<string[]>;
 
   isStarFilled: boolean = false;
 
@@ -48,47 +47,6 @@ export class EditionPage implements OnInit {
         switchMap((editionId) => from(favoritesService.isFavorite(editionId))),
       )
       .subscribe((isFavorite) => (this.isStarFilled = isFavorite));
-
-    // Helper variable for the view, to figure out what stars to draw when showing the rating.
-    //
-    // Returns a list of 5 icon names.
-    this.starIcons$ = this.workData$.pipe(
-      map((workData): string[] => {
-        if (workData == null) {
-          return [];
-        }
-
-        const avgRating = workData.rating_average;
-        if (avgRating == null) {
-          return [];
-        }
-        const floored = Math.floor(avgRating);
-        const remainder = avgRating - floored;
-
-        const stars = [];
-
-        // As many solid stars as the floored ratings avg
-        for (let i = 0; i < floored; i++) {
-          stars.push('star');
-        }
-
-        if (remainder > 0.7) {
-          // Remainders above 0.7 are rendered as full stars
-          stars.push('star');
-        } else if (remainder > 0.3) {
-          // Remainders between 0.3 - 0.7 are rendered as half-stars
-          stars.push('star-half-outline');
-        }
-
-        // Fill the rest with empty stars (outlines), until there's 5 stars
-        const fillerCount = Math.max(0, 5 - stars.length);
-        for (let i = 0; i < fillerCount; i++) {
-          stars.push('star-outline');
-        }
-
-        return stars;
-      }),
-    );
   }
 
   ngOnInit() { }
