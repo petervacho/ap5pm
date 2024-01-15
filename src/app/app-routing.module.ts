@@ -22,9 +22,9 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'edition-detail/:edition_id',
+    path: 'edition/:edition_id',
     loadChildren: () =>
-      import('./pages/edition-detail/edition-detail.module').then(
+      import('./pages/edition/edition.module').then(
         (m) => m.EditionDetailPageModule,
       ),
   },

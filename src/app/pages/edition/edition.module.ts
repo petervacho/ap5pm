@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { EditionDetailPageRoutingModule } from './edition-detail-routing.module';
+import { EditionDetailPageRoutingModule } from './edition-routing.module';
 
-import { EditionDetailPage } from './edition-detail.page';
+import { EditionPage } from './edition.page';
 
 @NgModule({
   imports: [
@@ -15,6 +15,6 @@ import { EditionDetailPage } from './edition-detail.page';
     IonicModule,
     EditionDetailPageRoutingModule
   ],
-  declarations: [EditionDetailPage]
+  declarations: [EditionPage]
 })
 export class EditionDetailPageModule {}

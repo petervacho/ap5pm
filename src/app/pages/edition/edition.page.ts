@@ -8,11 +8,11 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibr
 import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
-  selector: 'app-edition-detail',
-  templateUrl: './edition-detail.page.html',
-  styleUrls: ['./edition-detail.page.scss'],
+  selector: 'app-edition',
+  templateUrl: './edition.page.html',
+  styleUrls: ['./edition.page.scss'],
 })
-export class EditionDetailPage implements OnInit {
+export class EditionPage implements OnInit {
   private editionId$: Observable<string>;
   public editionData$: Observable<EditionModel>;
   public workData$: Observable<WorkModel | null>;

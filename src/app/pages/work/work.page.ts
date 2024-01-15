@@ -54,7 +54,7 @@ export class WorkPage implements OnInit {
     this.loadEditionBatch();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   // Obtain the work's name from API (only used if we weren't able to get it from the shared service)
   private async getWorkName() {
@@ -102,6 +102,6 @@ export class WorkPage implements OnInit {
 
   redirectEdition(item: EditionModel) {
     this.sharedService.setData('editionDetail', item);
-    this.router.navigate(['/edition-detail/', item.editionId.toString()]);
+    this.router.navigate(['/edition/', item.editionId.toString()]);
   }
 }
