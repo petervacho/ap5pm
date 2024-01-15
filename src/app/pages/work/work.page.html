@@ -16,24 +16,7 @@
   </ion-header>
 
   <ion-list *ngIf="fetchedEditions$ | async; let editions">
-    <ion-item *ngFor="let edition of editions" (click)="redirectEdition(edition)" routerLink="#">
-      <img *ngIf="edition.getThumbnail('S') as thumbnail; else noThumbnail" [src]="thumbnail" alt="Book cover"
-        slot="start" />
-      <ng-template #noThumbnail>
-        <ion-icon name="book-outline" slot="start"></ion-icon>
-      </ng-template>
-
-      <ion-label>
-        <h2>{{ edition.title }}</h2>
-        <p>
-          <span *ngIf="edition.publishers.length > 0"><b>Publisher: </b>{{ edition.publishers.join(', ') }},
-          </span>
-          <span *ngIf="edition.publish_date"><b>Publish date: </b>{{ edition.publish_date }},
-          </span>
-          <span *ngIf="edition.languages.length > 0"><b>Language: </b>{{ edition.languages.join(', ') }}</span>
-        </p>
-      </ion-label>
-    </ion-item>
+    <app-edition-list-item *ngFor="let edition of editions" [edition]="edition"></app-edition-list-item>
   </ion-list>
 
   <ion-infinite-scroll (ionInfinite)="loadData($event)">

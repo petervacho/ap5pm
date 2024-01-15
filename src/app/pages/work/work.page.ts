@@ -99,9 +99,4 @@ export class WorkPage implements OnInit {
       event.target.disabled = true;
     }
   }
-
-  redirectEdition(item: EditionModel) {
-    this.sharedService.setData('editionDetail', item);
-    this.router.navigate(['/edition/', item.editionId.toString()]);
-  }
 }
