@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { from } from 'rxjs';
+import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import {
   ThemeService,
   ThemeSetting,
@@ -17,6 +18,7 @@ export class SettingsPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private themeService: ThemeService,
+    private favoritesService: FavoritesService,
   ) {
     const currentThemeSetting$ = from(themeService.getPreference());
     currentThemeSetting$.subscribe(
@@ -41,5 +43,9 @@ export class SettingsPage implements OnInit {
     if (currentTheme != newTheme) {
       this.themeService.updatePageTheme();
     }
+  }
+
+  async clearFavorites() {
+    this.favoritesService.setFavorites(new Set([]));
   }
 }
