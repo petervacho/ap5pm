@@ -7,10 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { WorkPageRoutingModule } from './work-routing.module';
 
 import { WorkPage } from './work.page';
-import { EditionListItemComponent } from 'src/app/components/edition-list-item/edition-list-item.component';
+import { EditionListItemModule } from 'src/app/components/edition-list-item/edition-list-item.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, WorkPageRoutingModule],
-  declarations: [WorkPage, EditionListItemComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    WorkPageRoutingModule,
+    EditionListItemModule,
+  ],
+  declarations: [WorkPage],
 })
-export class WorkPageModule { }
+export class WorkPageModule {}
