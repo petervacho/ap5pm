@@ -1,4 +1,4 @@
-<ion-item (click)="redirectToEdition()" routerLink="#">
+<ion-item button (click)="redirectToEdition()">
   <ion-img *ngIf="edition.getThumbnail('S') as thumbnail; else noThumbnail" [src]="thumbnail" alt="Book cover"
     slot="start" />
   <ng-template #noThumbnail>
