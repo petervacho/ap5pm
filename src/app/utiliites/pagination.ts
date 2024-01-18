@@ -10,6 +10,7 @@ abstract class BasePaginator<ItemT> {
 
   protected curIndex: number;
   protected keepFetching: boolean = true;
+  protected eventTarget: HTMLIonInfiniteScrollElement | null = null;
 
   constructor(startOffset: number = 0) {
     this.curIndex = startOffset;
@@ -60,6 +61,11 @@ abstract class BasePaginator<ItemT> {
     // Disable infinite-scroll requesting more data, we've already loaded everything.
     if (this.keepFetching === false) {
       event.target.disabled = true;
+    }
+
+    // Store the event's target, so that we can re-enable it if needed
+    if (this.eventTarget == null) {
+      this.eventTarget = event.target;
     }
   }
 }
@@ -114,6 +120,9 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
     this.searchTerm = searchTerm;
     this.curIndex = startPage;
     this.keepFetching = true;
+    if (this.eventTarget != null) {
+      this.eventTarget.disabled;
+    }
     await this.loadNext();
   }
 
