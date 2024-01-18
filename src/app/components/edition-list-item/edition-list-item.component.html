@@ -1,6 +1,7 @@
 <ion-item button (click)="redirectToEdition()">
-  <app-lazy-img slot="start" [src]="edition.getThumbnail('S')" errorIconName="image-outline"
-    nullIconName="book-outline"></app-lazy-img>
+  <app-lazy-img slot="start" [ngStyle]="{ 'font-size': '35px', width: '40px' }" [src]="edition.getThumbnail('S')"
+    errorIconName="image-outline" nullIconName="book-outline">
+  </app-lazy-img>
 
   <ion-label>
     <h2>{{ edition.title }}</h2>

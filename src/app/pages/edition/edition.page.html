@@ -21,7 +21,10 @@
   </ion-header>
 
   <ion-card *ngIf="editionData$ | async as data">
-    <ion-img [src]="data.getThumbnail('L')" alt="Book cover"></ion-img>
+    <app-lazy-img text-center [src]="data.getThumbnail('L')"
+      [ngStyle]="{ display: 'flex', 'justify-content': 'center', 'align-items': 'center', margin: '0 auto', 'font-size': '400px', width: '300px' }"
+      errorIconName="image-outline" nullIconName="book-outline"></app-lazy-img>
+
     <ion-card-header>
       <ion-card-title>{{ data.title }}</ion-card-title>
       <ion-card-subtitle *ngIf="data.subtitle">{{ data.subtitle }}</ion-card-subtitle>

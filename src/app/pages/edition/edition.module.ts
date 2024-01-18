@@ -8,6 +8,7 @@ import { EditionDetailPageRoutingModule } from './edition-routing.module';
 
 import { EditionPage } from './edition.page';
 import { WorkRatingItemModule } from 'src/app/components/work-rating-item/work-rating-item.module';
+import { LazyImgModule } from 'src/app/components/lazy-img/lazy-img.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { WorkRatingItemModule } from 'src/app/components/work-rating-item/work-r
     IonicModule,
     EditionDetailPageRoutingModule,
     WorkRatingItemModule,
+    LazyImgModule,
   ],
   declarations: [EditionPage],
 })
-export class EditionDetailPageModule {}
+export class EditionDetailPageModule { }
