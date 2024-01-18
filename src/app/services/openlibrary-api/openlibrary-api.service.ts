@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable, combineLatest, filter, map } from 'rxjs';
-import { WorkResponse } from 'src/app/models/raw/work.model';
-import { WorkBookshelvesResponse } from 'src/app/models/raw/work_bookshelves.model';
-import { WorkRatingsResponse } from 'src/app/models/raw/work_ratings.model';
+import { WorkResponse } from 'src/app/models/responses/work.model';
+import { WorkBookshelvesResponse } from 'src/app/models/responses/work_bookshelves.model';
+import { WorkRatingsResponse } from 'src/app/models/responses/work_ratings.model';
 import { WorkModel } from 'src/app/models/custom/work.model';
-import { EditionResponse } from 'src/app/models/raw/edition.model';
+import { EditionResponse } from 'src/app/models/responses/edition.model';
 import { EditionModel } from 'src/app/models/custom/edition.model';
 import { SearchModel } from 'src/app/models/custom/search.model';
-import { SearchResponse } from 'src/app/models/raw/search.model';
-import { EditionBatchResponse } from 'src/app/models/raw/edition_batch.model';
+import { SearchResponse } from 'src/app/models/responses/search.model';
+import { EditionBatchResponse } from 'src/app/models/responses/edition_batch.model';
 import { EditionBatchModel } from 'src/app/models/custom/edition_batch.model';
 
 @Injectable({

@@ -1,8 +1,8 @@
 import { environment } from 'src/environments/environment';
-import { WorkResponse } from '../raw/work.model';
-import { WorkBookshelvesResponse } from '../raw/work_bookshelves.model';
+import { WorkResponse } from '../responses/work.model';
+import { WorkBookshelvesResponse } from '../responses/work_bookshelves.model';
 import { checkList, removePrefix } from './utils';
-import { WorkRatingsResponse } from '../raw/work_ratings.model';
+import { WorkRatingsResponse } from '../responses/work_ratings.model';
 
 export class WorkModel {
   constructor(

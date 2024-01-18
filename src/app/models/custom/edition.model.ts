@@ -1,5 +1,5 @@
 import { environment } from 'src/environments/environment';
-import { EditionResponse } from '../raw/edition.model';
+import { EditionResponse } from '../responses/edition.model';
 import { capitalize, checkList, removePrefix } from './utils';
 
 export class EditionModel {

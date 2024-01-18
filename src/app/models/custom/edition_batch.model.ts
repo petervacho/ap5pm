@@ -1,4 +1,4 @@
-import { EditionBatchResponse } from '../raw/edition_batch.model';
+import { EditionBatchResponse } from '../responses/edition_batch.model';
 import { EditionModel } from './edition.model';
 
 export class EditionBatchModel {

@@ -1,4 +1,4 @@
-import { SearchDoc, SearchResponse } from '../raw/search.model';
+import { SearchDoc, SearchResponse } from '../responses/search.model';
 import { checkList, removePrefix } from './utils';
 
 export class SearchModel {
