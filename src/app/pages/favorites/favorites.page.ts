@@ -4,6 +4,11 @@ import { EditionModel } from 'src/app/models/custom/edition.model';
 import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 
+// TODO: This needs re-working, either with just a custom paginator,
+// or with a completely different logic (perhaps make favorites into
+// sort of a "already read" list, allowing us to show the total amount
+// of pages read, and things like that).
+
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
@@ -32,7 +37,7 @@ export class FavoritesPage implements OnInit {
     this.loadEditions();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   private async loadEditions() {
     if (this.keepFetcing == false) {

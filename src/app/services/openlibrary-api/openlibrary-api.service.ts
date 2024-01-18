@@ -19,28 +19,44 @@ import { EditionBatchModel } from 'src/app/models/custom/edition_batch.model';
 export class OpenlibraryApiService {
   constructor(private http: HttpClient) { }
 
+  /** Perform a search for given query, returning the matching responses.
+   *
+   * Uses the `/search.json` endpoint.
+   *
+   * This is a paginated search, as getting back all of the matching responses
+   * could mean fetching megabytes of data in some cases, and could be fairly slow.
+   *
+   * The pagination is handled directly by the API, the caller is responsible for
+   * obtaining more data when needed using `page_no`.
+   */
   search$(
     query: string,
-    page_no: number = 1,
+    pageNo: number = 1,
     limit: number = 10,
   ): Observable<SearchModel> {
     const encodedQuery = encodeURIComponent(query);
     const resp = this.http.get<SearchResponse>(
-      `${environment.baseUrl}/search.json?limit=${limit}&page=${page_no}&q=${encodedQuery}`,
+      `${environment.baseUrl}/search.json?limit=${limit}&page=${pageNo}&q=${encodedQuery}`,
     );
 
     return resp.pipe(map((item) => new SearchModel(item)));
   }
 
-  get_work$(work_key: string): Observable<WorkModel> {
+  /** Obtain data about given work (by the work's ID).
+   *
+   * Uses the `/works/[ID].json`, `/works/[ID]/bookshelves.json` and `works/[ID]/ratings.json` endpoints.
+   *
+   * This will combine the results of multiple responses in a single returned model object.
+   */
+  get_work$(workId: string): Observable<WorkModel> {
     const workResp$ = this.http.get<WorkResponse>(
-      `${environment.baseUrl}/works/${work_key}.json`,
+      `${environment.baseUrl}/works/${workId}.json`,
     );
     const bookshelvesResp$ = this.http.get<WorkBookshelvesResponse>(
-      `${environment.baseUrl}/works/${work_key}/bookshelves.json`,
+      `${environment.baseUrl}/works/${workId}/bookshelves.json`,
     );
     const ratingsResp$ = this.http.get<WorkRatingsResponse>(
-      `${environment.baseUrl}/works/${work_key}/ratings.json`,
+      `${environment.baseUrl}/works/${workId}/ratings.json`,
     );
 
     const combinedResp$ = combineLatest([
@@ -65,9 +81,13 @@ export class OpenlibraryApiService {
     );
   }
 
-  get_edition$(edition_key: string): Observable<EditionModel> {
+  /** Obtain data about given edition (by the edition's ID).
+   *
+   * Uses the `/books/[ID].json` endpoint.
+   */
+  get_edition$(editionId: string): Observable<EditionModel> {
     const response$ = this.http.get<EditionResponse>(
-      `${environment.baseUrl}/books/${edition_key}.json`,
+      `${environment.baseUrl}/books/${editionId}.json`,
     );
 
     return response$.pipe(map((rawData) => new EditionModel(rawData)));

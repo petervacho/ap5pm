@@ -33,10 +33,12 @@ export class SearchPage implements OnInit {
     this.paginator.loadNext();
   }
 
+  /** Called whenever the user types something else in the search term. */
   async onSearchTermChanged() {
     await this.paginator.changeSearchTerm(this.searchTerm);
   }
 
+  /** Called when the user clicks on the settings icon. */
   async openSettings() {
     const modal = await this.modalCtrl.create({ component: SettingsPage });
     await modal.present();

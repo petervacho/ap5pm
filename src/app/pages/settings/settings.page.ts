@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, RadioGroupCustomEvent } from '@ionic/angular';
 import { from } from 'rxjs';
 import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import {
@@ -28,12 +28,14 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() { }
 
+  /** Called when user dismisses (closes) the settings modal */
   async dismiss() {
     await this.modalCtrl.dismiss();
   }
 
-  async onThemeChange(event: any) {
-    const selectedTheme: 'auto' | 'dark' | 'light' = event.detail.value;
+  /** Called whenever the user clicks on one of the theme selection options. */
+  async onThemeChange(event: RadioGroupCustomEvent<'auto' | 'dark' | 'light'>) {
+    const selectedTheme = event.detail.value;
     const themeSetting = selectedTheme as ThemeSetting;
 
     const currentTheme = await this.themeService.getCurrentTheme();
@@ -45,6 +47,7 @@ export class SettingsPage implements OnInit {
     }
   }
 
+  /** Called when the user clicks on the clear favorites button. */
   async clearFavorites() {
     await this.favoritesService.setFavorites(new Set([]));
   }

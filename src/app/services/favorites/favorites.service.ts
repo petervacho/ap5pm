@@ -16,6 +16,7 @@ const FAVORITES_LOCAL_STORAGE_KEY = 'favorites';
 export class FavoritesService {
   constructor() { }
 
+  /** Obtain all user's favorite editions from the local storage. */
   async getFavorites(): Promise<Set<string>> {
     const storedValue = await Preferences.get({
       key: FAVORITES_LOCAL_STORAGE_KEY,
@@ -31,6 +32,7 @@ export class FavoritesService {
     return new Set(JSON.parse(storedValue.value) as string[]);
   }
 
+  /** Set a new list of editions as user's favorites in the local storage. */
   async setFavorites(value: Set<string>) {
     await Preferences.set({
       key: FAVORITES_LOCAL_STORAGE_KEY,
@@ -38,6 +40,7 @@ export class FavoritesService {
     });
   }
 
+  /** Add a single new edition (id) to user's favorites (updating local storage). */
   async addFavorite(edition_id: string): Promise<boolean> {
     const favorites = await this.getFavorites();
 
@@ -51,15 +54,20 @@ export class FavoritesService {
     return true;
   }
 
-  async removeFavorite(edition_id: string): Promise<boolean> {
+  /** Remove a single edition (id) from user's favorites (updating local storage). */
+  async removeFavorite(editionId: string): Promise<boolean> {
     const favorites = await this.getFavorites();
-    const existed = favorites.delete(edition_id);
+    const existed = favorites.delete(editionId);
     await this.setFavorites(favorites);
     return existed;
   }
 
-  async isFavorite(edition_id: string) {
+  /** Check if the given edition (id) is marked favorite by the user. */
+  async isFavorite(editionId: string) {
+    // NOTE: This could probably have been made more efficient with a cache,
+    // which only updates from setFavorites, which would even allow it to
+    // be synchronous. However, I'm not too concerned with the performance here.
     const favorites = await this.getFavorites();
-    return favorites.has(edition_id);
+    return favorites.has(editionId);
   }
 }
