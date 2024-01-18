@@ -1,9 +1,6 @@
 <ion-item button (click)="redirectToEdition()">
-  <ion-img *ngIf="edition.getThumbnail('S') as thumbnail; else noThumbnail" [src]="thumbnail" alt="Book cover"
-    slot="start" />
-  <ng-template #noThumbnail>
-    <ion-icon name="book-outline" slot="start"></ion-icon>
-  </ng-template>
+  <app-lazy-img slot="start" [src]="edition.getThumbnail('S')" errorIconName="image-outline"
+    nullIconName="book-outline"></app-lazy-img>
 
   <ion-label>
     <h2>{{ edition.title }}</h2>

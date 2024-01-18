@@ -1,0 +1,13 @@
+<ng-container>
+  <ng-container *ngIf="imgSrc; else noImg">
+    <ion-img [src]="imgSrc" (ionImgDidLoad)="onIconLoad()" (ionError)="onIconError()" *ngIf="!isError">
+    </ion-img>
+
+    <ion-spinner [ngClass]="{ center: true }" *ngIf="isLoading"></ion-spinner>
+    <ion-icon [name]="errorIconName" *ngIf="isError"></ion-icon>
+  </ng-container>
+
+  <ng-template #noImg>
+    <ion-icon [name]="nullIconName"></ion-icon>
+  </ng-template>
+</ng-container>
