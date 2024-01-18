@@ -4,23 +4,26 @@
       <ion-back-button text="Search"></ion-back-button>
     </ion-buttons>
 
-    <ion-title>{{ workName$ | async }}</ion-title>
+    <ion-title *ngIf="(workData$ | async); let data">{{ data.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">{{ workName$ | async }}</ion-title>
+      <ion-title size="large" *ngIf="(workData$ | async); let data">{{ data.title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="fetchedEditions$ | async; let editions">
-    <app-edition-list-item *ngFor="let edition of editions" [edition]="edition"></app-edition-list-item>
-  </ion-list>
+  <ng-container *ngIf="paginator$ | async; let paginator">
+    <ion-list *ngIf="paginator.items$ | async; let editions">
+      <app-edition-list-item *ngFor="let edition of editions" [edition]="edition"
+        routePrefix="tabs/search"></app-edition-list-item>
+    </ion-list>
 
-  <ion-infinite-scroll (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more editions...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+    <ion-infinite-scroll (ionInfinite)="paginator.infiniteScrollEvent($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more editions...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ng-container>
 </ion-content>

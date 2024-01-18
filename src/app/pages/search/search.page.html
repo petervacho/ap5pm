@@ -13,11 +13,11 @@
 <ion-content>
   <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchTermChanged()"></ion-searchbar>
 
-  <ion-list *ngIf="items$ | async; let items">
-    <app-work-list-item *ngFor="let item of items" [work]="item"></app-work-list-item>
+  <ion-list *ngIf="paginator.items$ | async; let works">
+    <app-work-list-item *ngFor="let work of works" [work]="work"></app-work-list-item>
   </ion-list>
 
-  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll (ionInfinite)="paginator.infiniteScrollEvent($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles"
       loadingText="Loading more data..."></ion-infinite-scroll-content>
   </ion-infinite-scroll>

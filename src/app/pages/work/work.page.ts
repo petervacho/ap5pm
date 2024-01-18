@@ -1,17 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  BehaviorSubject,
-  Observable,
-  firstValueFrom,
-  from,
-  map,
-  of,
-} from 'rxjs';
-import { EditionModel } from 'src/app/models/custom/edition.model';
+import { Observable, map, switchMap } from 'rxjs';
 import { WorkModel } from 'src/app/models/custom/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SharedService } from 'src/app/services/shared/shared.service';
+import { WorkEditionsPaginator } from 'src/app/utiliites/pagination';
 
 @Component({
   selector: 'app-work',
@@ -19,83 +12,38 @@ import { SharedService } from 'src/app/services/shared/shared.service';
   styleUrls: ['./work.page.scss'],
 })
 export class WorkPage implements OnInit {
-  private workId$: Observable<string>;
-  workName$: Observable<string>;
+  workId$: Observable<string> = this.route.params.pipe(
+    map((params) => params['work_id']),
+  );
+  workData$: Observable<WorkModel> = this.workId$.pipe(
+    switchMap((workId) => {
+      return this.openLibraryApiService.get_work$(workId);
+    }),
+  );
+  paginator$: Observable<WorkEditionsPaginator> = this.workId$.pipe(
+    map((workId) => {
+      const paginator = new WorkEditionsPaginator(
+        workId,
+        this.openLibraryApiService,
+      );
 
-  // Pagination stuff for the editions infinite-scroll
-  private offset: number = 0;
-  private keepFetching: boolean = true;
-  private fetchedEditionsSubject = new BehaviorSubject<EditionModel[]>([]);
-  fetchedEditions$: Observable<EditionModel[]> =
-    this.fetchedEditionsSubject.asObservable();
+      // Start loading the first batch of works immediately.
+      // This will start the loadNext async function, but it will not wait
+      // for it's completion here (blocking the page load).
+      // Since this will eventually just lead to an update of `this.paginator.items$`
+      // observable, which the view is waiting on, and we don't need the items here,
+      // we can just start this function, and leave it to eventually execute in the
+      // event loop.
+      paginator.loadNext();
+      return paginator;
+    }),
+  );
 
   constructor(
     private route: ActivatedRoute,
     private openLibraryApiService: OpenlibraryApiService,
     private sharedService: SharedService,
-  ) {
-    const workDetail = sharedService.getData<WorkModel>('workDetail');
-    if (workDetail != null) {
-      // Create an observable which only emits a single constant value
-      this.workId$ = of(workDetail.workId);
-      this.workName$ = of(workDetail.title);
-    } else {
-      // Angular doesn't expose parameters immediately, it might take a while until they're available.
-      // Subscribe to them from the params observable, into workId
-      this.workId$ = this.route.params.pipe(map((params) => params['work_id']));
+  ) { }
 
-      // Get the work name from an API call
-      this.workName$ = from(this.getWorkName()); // converts Promise to Observable
-    }
-
-    // Perform the initial load (ion-infinite-scroll won't trigger it on it's own, since
-    // without any data, there's no scrollbar, and so no scroll down action to trigger it)
-    this.loadEditionBatch();
-  }
-
-  ngOnInit() {}
-
-  // Obtain the work's name from API (only used if we weren't able to get it from the shared service)
-  private async getWorkName() {
-    const workId = await firstValueFrom(this.workId$);
-    const response = await firstValueFrom(
-      this.openLibraryApiService.get_work$(workId),
-    );
-    return response.title;
-  }
-
-  private async loadEditionBatch() {
-    if (this.keepFetching == false) {
-      return;
-    }
-
-    const workId = await firstValueFrom(this.workId$);
-    const response = await firstValueFrom(
-      this.openLibraryApiService.get_edition_batch$(workId, this.offset),
-    );
-
-    const offset = response.getNextOffset();
-    if (offset == null) {
-      this.keepFetching = false;
-    } else {
-      this.offset = offset;
-    }
-
-    this.fetchedEditionsSubject.next([
-      ...this.fetchedEditionsSubject.value,
-      ...response.data,
-    ]);
-  }
-
-  async loadData(event: any) {
-    // We need this to be blocking, so that `ion-infinite-scroll` can
-    // properly show the loading bar (since the API can be pretty slow).
-    await this.loadEditionBatch();
-    event.target.complete();
-
-    // Check if all editions are loaded
-    if (this.keepFetching == false) {
-      event.target.disabled = true;
-    }
-  }
+  ngOnInit() { }
 }

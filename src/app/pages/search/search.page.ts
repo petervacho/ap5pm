@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { SettingsPage } from '../settings/settings.page';
-import { SearchDataModel } from 'src/app/models/custom/search.model';
+import { SearchWorkPaginator } from 'src/app/utiliites/pagination';
 
 @Component({
   selector: 'app-search',
@@ -13,10 +12,10 @@ import { SearchDataModel } from 'src/app/models/custom/search.model';
 export class SearchPage implements OnInit {
   searchTerm: string = 'Tolkien';
 
-  private itemsSubject = new BehaviorSubject<SearchDataModel[]>([]);
-  items$: Observable<SearchDataModel[]> = this.itemsSubject.asObservable();
-  private pageNumber: number = 1;
-  private limit: number = 20;
+  paginator = new SearchWorkPaginator(
+    this.searchTerm,
+    this.openLibraryApiService,
+  );
 
   constructor(
     private openLibraryApiService: OpenlibraryApiService,
@@ -24,36 +23,18 @@ export class SearchPage implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.search();
+    // Start loading the first batch of works immediately.
+    // This will start the loadNext async function, but it will not wait
+    // for it's completion here (blocking the page load).
+    // Since this will eventually just lead to an update of `this.paginator.items$`
+    // observable, which the view is waiting on, and we don't need the items here,
+    // we can just start this function, and leave it to eventually execute in the
+    // event loop.
+    this.paginator.loadNext();
   }
 
-  async search() {
-    const result = await firstValueFrom(
-      this.openLibraryApiService.search$(
-        this.searchTerm,
-        this.pageNumber,
-        this.limit,
-      ),
-    );
-    this.itemsSubject.next([...this.itemsSubject.value, ...result.data]);
-  }
-
-  onSearchTermChanged() {
-    this.pageNumber = 1;
-    this.itemsSubject.next([]);
-    this.search();
-  }
-
-  loadData(event: any) {
-    // TODO: Check max result amount, and figure out when to stop
-    // (once we already obtained all returned results).
-    this.pageNumber++;
-    // We need this to be blocking, so that the `ion-infinite-scroll` can
-    // properly show the loading bar (since the API can be pretty slow sometimes).
-    // Using observables in the templates with an async pipe would be non-blocking,
-    // and can cause issues with immediately requesting next page, even though the
-    // previous one didn't yet load.
-    this.search().then(() => event.target.complete());
+  async onSearchTermChanged() {
+    await this.paginator.changeSearchTerm(this.searchTerm);
   }
 
   async openSettings() {
