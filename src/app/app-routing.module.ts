@@ -4,37 +4,15 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'search',
-    pathMatch: 'full',
-  },
-  {
-    path: 'search',
     loadChildren: () =>
-      import('./pages/search/search.module').then(
-        (m) => m.SearchPageModule,
-      ),
-  },
-  {
-    path: 'work/:work_id',
-    loadChildren: () =>
-      import('./pages/work/work.module').then(
-        (m) => m.WorkPageModule,
-      ),
-  },
-  {
-    path: 'edition/:edition_id',
-    loadChildren: () =>
-      import('./pages/edition/edition.module').then(
-        (m) => m.EditionDetailPageModule,
-      ),
+      import('./tabs/tabs.module').then((m) => m.TabsPageModule),
   },
   {
     path: 'settings',
-    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
-  },
-  {
-    path: 'favorites',
-    loadChildren: () => import('./pages/favorites/favorites.module').then( m => m.FavoritesPageModule)
+    loadChildren: () =>
+      import('./pages/settings/settings.module').then(
+        (m) => m.SettingsPageModule,
+      ),
   },
 ];
 
@@ -44,4 +22,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -10,16 +10,21 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 })
 export class EditionListItemComponent implements OnInit {
   @Input() edition!: EditionModel;
+  @Input() routePrefix: string = '';
 
   constructor(
     private sharedService: SharedService,
     private router: Router,
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   redirectToEdition() {
     this.sharedService.setData('editionDetail', this.edition);
-    this.router.navigate(['/edition/', this.edition.editionId.toString()]);
+    this.router.navigate([
+      this.routePrefix,
+      'edition',
+      this.edition.editionId.toString(),
+    ]);
   }
 }

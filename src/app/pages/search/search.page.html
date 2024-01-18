@@ -14,7 +14,7 @@
   <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchTermChanged()"></ion-searchbar>
 
   <ion-list *ngIf="paginator.items$ | async; let works">
-    <app-work-list-item *ngFor="let work of works" [work]="work"></app-work-list-item>
+    <app-work-list-item *ngFor="let work of works" [work]="work" routePrefix="tabs/search"></app-work-list-item>
   </ion-list>
 
   <ion-infinite-scroll (ionInfinite)="paginator.infiniteScrollEvent($event)">

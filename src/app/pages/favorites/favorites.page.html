@@ -16,7 +16,8 @@
   </ion-header>
 
   <ion-list *ngIf="fetchedEditions$ | async; let editions">
-    <app-edition-list-item *ngFor="let edition of editions" [edition]="edition"></app-edition-list-item>
+    <app-edition-list-item *ngFor="let edition of editions" [edition]="edition"
+      routePrefix="tabs/favorites"></app-edition-list-item>
   </ion-list>
 
   <ion-infinite-scroll (ionInfinite)="loadData($event)">

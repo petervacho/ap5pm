@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchDataModel } from 'src/app/models/custom/search.model';
-import { WorkModel } from 'src/app/models/custom/work.model';
 import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
@@ -11,16 +10,21 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 })
 export class WorkListItemComponent implements OnInit {
   @Input() work!: SearchDataModel;
+  @Input() routePrefix: string = '';
 
   constructor(
     private sharedService: SharedService,
     private router: Router,
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   redirectToWork() {
     this.sharedService.setData('workDetail', this.work);
-    this.router.navigate(['/work/', this.work.workId.toString()]);
+    this.router.navigate([
+      this.routePrefix,
+      'work',
+      this.work.workId.toString(),
+    ]);
   }
 }

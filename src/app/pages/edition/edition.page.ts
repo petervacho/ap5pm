@@ -49,7 +49,7 @@ export class EditionPage implements OnInit {
       .subscribe((isFavorite) => (this.isFavorite = isFavorite));
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   // Obtain the edition data from API (only used if we weren't able to get it from the shared service)
   private async getEditionData(): Promise<EditionModel> {
