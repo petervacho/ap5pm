@@ -1,6 +1,12 @@
 <ion-item button (click)="redirectToEdition()">
-  <app-lazy-img slot="start" [ngStyle]="{ 'font-size': '35px', width: '40px' }" [src]="edition.getThumbnail('S')"
-    errorIconName="image-outline" nullIconName="book-outline">
+  <app-lazy-img slot="start" [ngStyle]="{
+      display: 'flex',
+      'justify-content': 'center',
+      'font-size': '35px',
+      'align-items': 'center',
+      margin: '0 15px',
+      width: '40px'
+    }" [src]="edition.getThumbnail('S')" errorIconName="image-outline" nullIconName="book-outline">
   </app-lazy-img>
 
   <ion-label>
