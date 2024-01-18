@@ -9,15 +9,15 @@ import { SharedService } from 'src/app/services/shared/shared.service';
   styleUrls: ['./edition-list-item.component.scss'],
 })
 export class EditionListItemComponent implements OnInit {
-  @Input() edition!: EditionModel;
+  @Input({ required: true }) edition!: EditionModel;
   @Input() routePrefix: string = '';
 
   constructor(
     private sharedService: SharedService,
     private router: Router,
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   redirectToEdition() {
     this.sharedService.setData('editionDetail', this.edition);

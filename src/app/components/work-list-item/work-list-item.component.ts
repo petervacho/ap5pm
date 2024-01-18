@@ -9,15 +9,15 @@ import { SharedService } from 'src/app/services/shared/shared.service';
   styleUrls: ['./work-list-item.component.scss'],
 })
 export class WorkListItemComponent implements OnInit {
-  @Input() work!: SearchDataModel;
+  @Input({ required: true }) work!: SearchDataModel;
   @Input() routePrefix: string = '';
 
   constructor(
     private sharedService: SharedService,
     private router: Router,
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   redirectToWork() {
     this.sharedService.setData('workDetail', this.work);

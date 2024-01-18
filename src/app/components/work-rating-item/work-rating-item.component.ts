@@ -7,7 +7,7 @@ import { WorkModel } from 'src/app/models/custom/work.model';
   styleUrls: ['./work-rating-item.component.scss'],
 })
 export class WorkRatingItemComponent implements OnInit {
-  @Input() work!: WorkModel;
+  @Input({ required: true }) work!: WorkModel;
 
   constructor() { }
 
