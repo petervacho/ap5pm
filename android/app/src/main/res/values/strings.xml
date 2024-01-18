@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Book Explorer</string>
+    <string name="title_activity_main">Book Explorer</string>
+    <string name="package_name">com.peter_vacho.book_explorer</string>
+    <string name="custom_url_scheme">com.peter_vacho.book_explorer</string>
+</resources>
