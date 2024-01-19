@@ -14,13 +14,10 @@ export class SearchPage implements OnInit {
 
   paginator = new SearchWorkPaginator(
     this.searchTerm,
-    this.openLibraryApiService,
+    this.openLibraryApiService
   );
 
-  constructor(
-    private openLibraryApiService: OpenlibraryApiService,
-    private modalCtrl: ModalController,
-  ) { }
+  constructor(private openLibraryApiService: OpenlibraryApiService) { }
 
   ngOnInit(): void {
     // Start loading the first batch of works immediately.
@@ -36,14 +33,5 @@ export class SearchPage implements OnInit {
   /** Called whenever the user types something else in the search term. */
   async onSearchTermChanged() {
     await this.paginator.changeSearchTerm(this.searchTerm);
-  }
-
-  /** Called when the user clicks on the settings icon. */
-  async openSettings() {
-    const modal = await this.modalCtrl.create({ component: SettingsPage });
-    await modal.present();
-
-    // Reset the list data (start from page 1 again)
-    modal.onWillDismiss().then((_) => this.onSearchTermChanged());
   }
 }
