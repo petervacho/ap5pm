@@ -79,14 +79,14 @@ export class WorkEditionsPaginator extends BasePaginator<EditionModel> {
   constructor(
     private workId: string,
     private openLibraryApiService: OpenlibraryApiService,
-    startOffset: number = 0,
+    startOffset: number = 0
   ) {
     super(startOffset);
   }
 
   async getNext(): Promise<EditionModel[]> {
     const items = await firstValueFrom(
-      this.openLibraryApiService.get_edition_batch$(this.workId, this.curIndex),
+      this.openLibraryApiService.get_edition_batch$(this.workId, this.curIndex)
     );
 
     const nextOffset = items.getNextOffset();
@@ -109,7 +109,7 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
     private searchTerm: string,
     private openLibraryApiService: OpenlibraryApiService,
     private pageLimit: number = 20,
-    startPage: number = 1,
+    startPage: number = 1
   ) {
     super(startPage);
   }
@@ -131,8 +131,8 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
       this.openLibraryApiService.search$(
         this.searchTerm,
         this.curIndex,
-        this.pageLimit,
-      ),
+        this.pageLimit
+      )
     );
     const data = resp.data;
 
