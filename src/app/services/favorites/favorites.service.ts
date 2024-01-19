@@ -14,6 +14,11 @@ const FAVORITES_LOCAL_STORAGE_KEY = 'favorites';
   providedIn: 'root',
 })
 export class FavoritesService {
+  /** Use to allow apps to check whether there was an update to favorites
+   * since the last time they checked.
+   */
+  lastUpdate: Date | null = null;
+
   constructor() { }
 
   /** Obtain all user's favorite editions from the local storage. */
@@ -38,6 +43,8 @@ export class FavoritesService {
       key: FAVORITES_LOCAL_STORAGE_KEY,
       value: JSON.stringify(Array.from(value)),
     });
+
+    this.lastUpdate = new Date();
   }
 
   /** Add a single new edition (id) to user's favorites (updating local storage). */

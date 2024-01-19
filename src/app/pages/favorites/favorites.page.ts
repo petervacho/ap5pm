@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, firstValueFrom, from, map } from 'rxjs';
-import { EditionModel } from 'src/app/models/custom/edition.model';
 import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
 import { FavoritesPaginator } from 'src/app/utiliites/pagination';
@@ -16,6 +14,8 @@ import { FavoritesPaginator } from 'src/app/utiliites/pagination';
   styleUrls: ['./favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
+  lastUpdate: Date | null = null;
+
   paginator = new FavoritesPaginator(
     this.favoritesService,
     this.openLibraryApiService
@@ -38,16 +38,22 @@ export class FavoritesPage implements OnInit {
    * That means this will also perform the initial load.
    */
   ionViewWillEnter() {
-    // It isn't really necessary to call restart on first load, but it's also not
-    // expensive enough to the point where it would be an issue, and we do need it
-    // called in the subsequent calls.
-    // (i.e. I'm too lazy to safe-guard this with a bool flag)
-    //
-    // This will also perform the initial load.
-    // (Note: This is an async function, but we're not waiting for it to finish here,
-    // since this function is synchronous. Just let it run in the event loop. This is
-    // fine, because it will eventually just lead to updating `this.paginator.items$`
-    // observable, which the view is waiting on)
-    this.paginator.restart();
+    // Only call paginator.restart if this is the first time the page is loaded, or if
+    // the last update time we have stored doesn't match the last update time of the
+    // favorites service.
+    if (
+      this.lastUpdate == null ||
+      this.lastUpdate != this.favoritesService.lastUpdate
+    ) {
+      this.lastUpdate = this.favoritesService.lastUpdate;
+
+      // This will also perform the initial data load (calls loadNext)
+      //
+      // Note: this is an async function, but we're not waiting for it to finish here,
+      // since this function is synchronous. Just let it run in the event loop. This is
+      // fine, because it will eventually just lead to updating the `this.paginator.items$`
+      // observable, which the view is waiting on.
+      this.paginator.restart();
+    }
   }
 }
