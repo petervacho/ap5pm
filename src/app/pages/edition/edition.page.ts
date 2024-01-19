@@ -14,12 +14,10 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 })
 export class EditionPage implements OnInit {
   private editionId$: Observable<string> = this.route.params.pipe(
-    map((params) => params['edition_id']),
+    map((params) => params['edition_id'])
   );
   editionData$: Observable<EditionModel> = this.editionId$.pipe(
-    switchMap((editionId) =>
-      this.openLibraryApiService.get_edition$(editionId),
-    ),
+    switchMap((editionId) => this.openLibraryApiService.get_edition$(editionId))
   );
   workData$: Observable<WorkModel | null> = this.editionData$.pipe(
     map((editionData) => editionData.work_ids),
@@ -30,8 +28,8 @@ export class EditionPage implements OnInit {
       // only have 1 associated work.
       workIds.length == 1
         ? this.openLibraryApiService.get_work$(workIds[0])
-        : of(null),
-    ),
+        : of(null)
+    )
   );
 
   isFavorite: boolean = false;
@@ -39,7 +37,7 @@ export class EditionPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private openLibraryApiService: OpenlibraryApiService,
-    private favoritesService: FavoritesService,
+    private favoritesService: FavoritesService
   ) { }
 
   ngOnInit() {
@@ -47,16 +45,22 @@ export class EditionPage implements OnInit {
     this.editionId$
       .pipe(
         switchMap((editionId) =>
-          from(this.favoritesService.isFavorite(editionId)),
-        ),
+          from(this.favoritesService.isFavorite(editionId))
+        )
       )
       .subscribe((isFavorite) => (this.isFavorite = isFavorite));
   }
 
   /** Called when the user clicks on the star icon (to mark this edition as favorite). */
   async toggleFavorite() {
-    this.isFavorite = !this.isFavorite;
     const editionId = await firstValueFrom(this.editionId$);
-    await this.favoritesService.addFavorite(editionId);
+
+    if (!this.isFavorite) {
+      this.isFavorite = true;
+      await this.favoritesService.addFavorite(editionId);
+    } else {
+      this.isFavorite = false;
+      await this.favoritesService.removeFavorite(editionId);
+    }
   }
 }
