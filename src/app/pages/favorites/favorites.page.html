@@ -15,6 +15,13 @@
     </ion-toolbar>
   </ion-header>
 
+  <ion-card *ngIf="paginator.favoriteIds">
+    <ion-card-header>Books Added</ion-card-header>
+    <ion-card-content>
+      <h2>{{ paginator.favoriteIds.length }}</h2>
+    </ion-card-content>
+  </ion-card>
+
   <ion-list *ngIf="paginator.items$ | async; let editions">
     <app-edition-list-item
       *ngFor="let edition of editions"

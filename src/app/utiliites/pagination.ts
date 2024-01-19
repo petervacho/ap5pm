@@ -182,7 +182,7 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
  * single request for the next batch will make multiple API calls.
  */
 export class FavoritesPaginator extends BasePaginator<EditionModel> {
-  private favoriteIds: string[] | null = null;
+  favoriteIds: string[] | null = null;
 
   constructor(
     private favoritesService: FavoritesService,
