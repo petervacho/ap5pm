@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchDataModel } from 'src/app/models/custom/search.model';
-import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
   selector: 'app-work-list-item',
@@ -12,15 +11,11 @@ export class WorkListItemComponent implements OnInit {
   @Input({ required: true }) work!: SearchDataModel;
   @Input() routePrefix: string = '';
 
-  constructor(
-    private sharedService: SharedService,
-    private router: Router,
-  ) { }
+  constructor(private router: Router) { }
 
   ngOnInit() { }
 
   redirectToWork() {
-    this.sharedService.setData('workDetail', this.work);
     this.router.navigate([
       this.routePrefix,
       'work',

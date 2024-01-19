@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, map, switchMap } from 'rxjs';
 import { WorkModel } from 'src/app/models/custom/work.model';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
-import { SharedService } from 'src/app/services/shared/shared.service';
 import { WorkEditionsPaginator } from 'src/app/utiliites/pagination';
 
 @Component({
@@ -13,18 +12,18 @@ import { WorkEditionsPaginator } from 'src/app/utiliites/pagination';
 })
 export class WorkPage implements OnInit {
   workId$: Observable<string> = this.route.params.pipe(
-    map((params) => params['work_id']),
+    map((params) => params['work_id'])
   );
   workData$: Observable<WorkModel> = this.workId$.pipe(
     switchMap((workId) => {
       return this.openLibraryApiService.get_work$(workId);
-    }),
+    })
   );
   paginator$: Observable<WorkEditionsPaginator> = this.workId$.pipe(
     map((workId) => {
       const paginator = new WorkEditionsPaginator(
         workId,
-        this.openLibraryApiService,
+        this.openLibraryApiService
       );
 
       // Start loading the first batch of works immediately.
@@ -36,13 +35,12 @@ export class WorkPage implements OnInit {
       // event loop.
       paginator.loadNext();
       return paginator;
-    }),
+    })
   );
 
   constructor(
     private route: ActivatedRoute,
-    private openLibraryApiService: OpenlibraryApiService,
-    private sharedService: SharedService,
+    private openLibraryApiService: OpenlibraryApiService
   ) { }
 
   ngOnInit() { }

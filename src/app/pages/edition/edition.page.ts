@@ -5,7 +5,6 @@ import { EditionModel } from 'src/app/models/custom/edition.model';
 import { WorkModel } from 'src/app/models/custom/work.model';
 import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
-import { SharedService } from 'src/app/services/shared/shared.service';
 
 @Component({
   selector: 'app-edition',
