@@ -2,7 +2,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { EditionModel } from 'src/app/models/custom/edition.model';
 import { OpenlibraryApiService } from '../services/openlibrary-api/openlibrary-api.service';
-import { SearchDataModel, SearchModel } from '../models/custom/search.model';
+import { SearchDataModel } from '../models/custom/search.model';
 import { FavoritesService } from '../services/favorites/favorites.service';
 
 abstract class BasePaginator<ItemT> {
@@ -11,7 +11,6 @@ abstract class BasePaginator<ItemT> {
 
   protected curIndex: number;
   protected keepFetching: boolean = true;
-  protected eventTarget: HTMLIonInfiniteScrollElement | null = null;
 
   constructor(startOffset: number = 0) {
     this.curIndex = startOffset;
@@ -44,6 +43,23 @@ abstract class BasePaginator<ItemT> {
     this.subject.next([...this.subject.value, ...data]);
   }
 
+  /** Function called when the keepFetching variable is false after
+   * loading the batch, indicating that there's no more results to load.
+   *
+   * This should disable the ionic scroll event.
+   *
+   * NOTE: Subclasses should override this, and skip the event disabling
+   * behavior if the class supports any kind of "restarting", since once
+   * the ionic scroll event is disabled, it's not possible to re-enable it.
+   * (Which is pretty weird, but after a lot of experimentation, it just
+   * didn't seem to work.)
+   */
+  protected async disableEvent(
+    event: InfiniteScrollCustomEvent
+  ): Promise<void> {
+    event.target.disabled = true;
+  }
+
   /**
    * Handler function for `ion-infinite-scroll` element.
    *
@@ -54,19 +70,28 @@ abstract class BasePaginator<ItemT> {
    * ````
    */
   async infiniteScrollEvent(event: InfiniteScrollCustomEvent): Promise<void> {
+    // This can only happen if the event wasn't disabled by the `disableEvent` funtcion,
+    // this means it was intentionally left enabled (to support restarting). However,
+    // the paginator wasn't restarted yet, and there's no new data to be fetched now,
+    // so just mark the event as complete and quit.
+    if (this.keepFetching === false) {
+      event.target.complete();
+      return;
+    }
+
     // We need to make a blocking call here, so that `ion-infinite-scroll` can
     // properly show the loading icon/spinner.
     await this.loadNext();
     event.target.complete();
 
+    // Re-cast as boolean
+    // (otherwise, type-script will think we narrowed it to true because of the above if
+    // however the loadNext function actually could've modified the value.)
+    this.keepFetching = this.keepFetching as boolean;
+
     // Disable infinite-scroll requesting more data, we've already loaded everything.
     if (this.keepFetching === false) {
-      event.target.disabled = true;
-    }
-
-    // Store the event's target, so that we can re-enable it if needed
-    if (this.eventTarget == null) {
-      this.eventTarget = event.target;
+      await this.disableEvent(event);
     }
   }
 }
@@ -121,11 +146,14 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
     this.searchTerm = searchTerm;
     this.curIndex = startPage;
     this.keepFetching = true;
-    if (this.eventTarget != null) {
-      this.eventTarget.disabled = false;
-    }
     await this.loadNext();
   }
+
+  /** Override the even target disabling, and don't perform it.
+   *
+   * This allows us to restart the paginator (`changeSearchTerm`).
+   */
+  override async disableEvent(event: InfiniteScrollCustomEvent) { }
 
   async getNext(): Promise<SearchDataModel[]> {
     const resp = await firstValueFrom(
@@ -165,17 +193,23 @@ export class FavoritesPaginator extends BasePaginator<EditionModel> {
     super(startIndex);
   }
 
+  /** Restart the paginator, obtaining the favorite ids from the service again.
+   *
+   * This can sometimes be necessary, as the favorites may get updated.
+   */
   async restart(startIndex: number = 0) {
     this.subject.next([]);
     this.curIndex = startIndex;
     this.keepFetching = true;
-    if (this.eventTarget != null) {
-      this.eventTarget.disabled = false;
-    }
-
     this.favoriteIds = null;
     await this.loadNext();
   }
+
+  /** Override the even target disabling, and don't perform it.
+   *
+   * This allows us to restart the paginator (`restart`).
+   */
+  override async disableEvent(event: InfiniteScrollCustomEvent) { }
 
   async getNext(): Promise<EditionModel[]> {
     if (this.favoriteIds == null) {
