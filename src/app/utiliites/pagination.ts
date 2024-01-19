@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { EditionModel } from 'src/app/models/custom/edition.model';
 import { OpenlibraryApiService } from '../services/openlibrary-api/openlibrary-api.service';
 import { SearchDataModel, SearchModel } from '../models/custom/search.model';
+import { FavoritesService } from '../services/favorites/favorites.service';
 
 abstract class BasePaginator<ItemT> {
   protected subject = new BehaviorSubject<ItemT[]>([]);
@@ -121,7 +122,7 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
     this.curIndex = startPage;
     this.keepFetching = true;
     if (this.eventTarget != null) {
-      this.eventTarget.disabled;
+      this.eventTarget.disabled = false;
     }
     await this.loadNext();
   }
@@ -143,5 +144,61 @@ export class SearchWorkPaginator extends BasePaginator<SearchDataModel> {
     }
 
     return data;
+  }
+}
+
+/** Paginate over editions marked as favorite.
+ *
+ * This will obtain the information about the editions from the API, one-by-one
+ * (1 call per each edition), fetching in groups of `fetchSize`. That means a
+ * single request for the next batch will make multiple API calls.
+ */
+export class FavoritesPaginator extends BasePaginator<EditionModel> {
+  private favoriteIds: string[] | null = null;
+
+  constructor(
+    private favoritesService: FavoritesService,
+    private openLibraryApiService: OpenlibraryApiService,
+    private fetchSize: number = 20,
+    startIndex: number = 0
+  ) {
+    super(startIndex);
+  }
+
+  async restart(startIndex: number = 0) {
+    this.subject.next([]);
+    this.curIndex = startIndex;
+    this.keepFetching = true;
+    if (this.eventTarget != null) {
+      this.eventTarget.disabled = false;
+    }
+
+    this.favoriteIds = null;
+    await this.loadNext();
+  }
+
+  async getNext(): Promise<EditionModel[]> {
+    if (this.favoriteIds == null) {
+      this.favoriteIds = Array.from(await this.favoritesService.getFavorites());
+    }
+
+    if (this.curIndex + this.fetchSize >= this.favoriteIds.length) {
+      this.keepFetching = false;
+    }
+
+    const toFetch = this.favoriteIds.slice(
+      this.curIndex,
+      Math.min(this.curIndex + this.fetchSize, this.favoriteIds.length)
+    );
+
+    this.curIndex += this.fetchSize;
+
+    // Await all of the API call results at once
+    const promises = toFetch.map((id) =>
+      firstValueFrom(this.openLibraryApiService.get_edition$(id))
+    );
+    const results = await Promise.all(promises);
+
+    return results;
   }
 }

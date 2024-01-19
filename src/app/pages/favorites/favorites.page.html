@@ -15,13 +15,19 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list *ngIf="fetchedEditions$ | async; let editions">
-    <app-edition-list-item *ngFor="let edition of editions" [edition]="edition"
-      routePrefix="tabs/favorites"></app-edition-list-item>
+  <ion-list *ngIf="paginator.items$ | async; let editions">
+    <app-edition-list-item
+      *ngFor="let edition of editions"
+      [edition]="edition"
+      routePrefix="tabs/favorites"
+    ></app-edition-list-item>
   </ion-list>
 
-  <ion-infinite-scroll (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more editions...">
+  <ion-infinite-scroll (ionInfinite)="paginator.infiniteScrollEvent($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more editions..."
+    >
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>

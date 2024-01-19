@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, firstValueFrom, from, map } from 'rxjs';
 import { EditionModel } from 'src/app/models/custom/edition.model';
 import { FavoritesService } from 'src/app/services/favorites/favorites.service';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
+import { FavoritesPaginator } from 'src/app/utiliites/pagination';
 
 // TODO: This needs re-working, either with just a custom paginator,
 // or with a completely different logic (perhaps make favorites into
@@ -15,16 +16,10 @@ import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibr
   styleUrls: ['./favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
-  private favoriteEditionIds$!: Observable<string[]>;
-
-  // Pagination
-  private curIndex: number = 0;
-  private fetchSize: number = 20;
-  private keepFetcing: boolean = false;
-  private fetchedEditionsSubject = new BehaviorSubject<EditionModel[]>([]);
-  fetchedEditions$: Observable<EditionModel[]> =
-    this.fetchedEditionsSubject.asObservable();
-  protected eventTarget: HTMLIonInfiniteScrollElement | null = null;
+  paginator = new FavoritesPaginator(
+    this.favoritesService,
+    this.openLibraryApiService
+  );
 
   constructor(
     private favoritesService: FavoritesService,
@@ -43,65 +38,16 @@ export class FavoritesPage implements OnInit {
    * That means this will also perform the initial load.
    */
   ionViewWillEnter() {
-    this.favoriteEditionIds$ = from(this.favoritesService.getFavorites()).pipe(
-      map((x) => Array.from(x))
-    );
-
-    this.favoriteEditionIds$.subscribe(() => {
-      this.fetchedEditionsSubject.next([]);
-      this.curIndex = 0;
-      this.keepFetcing = true;
-      if (this.eventTarget != null) {
-        this.eventTarget.disabled = false;
-      }
-      this.loadEditions();
-    });
-  }
-
-  private async loadEditions() {
-    if (this.keepFetcing == false) {
-      return;
-    }
-
-    const editionIds = await firstValueFrom(this.favoriteEditionIds$);
-
-    if (this.curIndex + this.fetchSize >= editionIds.length) {
-      this.keepFetcing = false;
-    }
-
-    const toFetch = editionIds.slice(
-      this.curIndex,
-      Math.min(this.curIndex + this.fetchSize, editionIds.length)
-    );
-
-    this.curIndex += this.fetchSize;
-
-    // Await all of the API call results at once
-    const promises = toFetch.map((id) =>
-      firstValueFrom(this.openLibraryApiService.get_edition$(id))
-    );
-    const results = await Promise.all(promises);
-
-    this.fetchedEditionsSubject.next([
-      ...this.fetchedEditionsSubject.value,
-      ...results,
-    ]);
-  }
-
-  async loadData(event: any) {
-    // We need this to be blocking, so that `ion-infinite-scroll` can
-    // properly show the loading icon (since the API can be pretty slow)
-    await this.loadEditions();
-    event.target.complete();
-
-    // Check if all editions are loaded
-    if (this.keepFetcing == false) {
-      event.target.disabled = true;
-    }
-
-    // Store the event's target, so that we can re-enable it if needed
-    if (this.eventTarget == null) {
-      this.eventTarget = event.target;
-    }
+    // It isn't really necessary to call restart on first load, but it's also not
+    // expensive enough to the point where it would be an issue, and we do need it
+    // called in the subsequent calls.
+    // (i.e. I'm too lazy to safe-guard this with a bool flag)
+    //
+    // This will also perform the initial load.
+    // (Note: This is an async function, but we're not waiting for it to finish here,
+    // since this function is synchronous. Just let it run in the event loop. This is
+    // fine, because it will eventually just lead to updating `this.paginator.items$`
+    // observable, which the view is waiting on)
+    this.paginator.restart();
   }
 }
