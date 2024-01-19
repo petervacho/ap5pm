@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
 import { OpenlibraryApiService } from 'src/app/services/openlibrary-api/openlibrary-api.service';
-import { SettingsPage } from '../settings/settings.page';
 import { SearchWorkPaginator } from 'src/app/utiliites/pagination';
 
 @Component({
@@ -10,7 +8,9 @@ import { SearchWorkPaginator } from 'src/app/utiliites/pagination';
   styleUrls: ['search.page.scss'],
 })
 export class SearchPage implements OnInit {
-  searchTerm: string = 'Tolkien';
+  searchTerm: string = '';
+  searching: boolean = false;
+  searchFinished: boolean = false;
 
   paginator = new SearchWorkPaginator(
     this.searchTerm,
@@ -32,6 +32,14 @@ export class SearchPage implements OnInit {
 
   /** Called whenever the user types something else in the search term. */
   async onSearchTermChanged() {
+    this.searching = true;
     await this.paginator.changeSearchTerm(this.searchTerm);
+    this.searching = false;
+
+    if (this.searchTerm != '') {
+      this.searchFinished = true;
+    } else {
+      this.searchFinished = false;
+    }
   }
 }

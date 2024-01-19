@@ -14,13 +14,76 @@
     (ionChange)="onSearchTermChanged()"
   ></ion-searchbar>
 
-  <ion-list *ngIf="paginator.items$ | async; let works">
-    <app-work-list-item
-      *ngFor="let work of works"
-      [work]="work"
-      routePrefix="tabs/search"
-    ></app-work-list-item>
-  </ion-list>
+  <ng-container *ngIf="paginator.items$ | async; let works">
+    <ion-list *ngIf="works.length > 0; else noItems">
+      <app-work-list-item
+        *ngFor="let work of works"
+        [work]="work"
+        routePrefix="tabs/search"
+      ></app-work-list-item>
+    </ion-list>
+
+    <ng-template #noItems>
+      <!-- Search term is empty -->
+      <ng-container *ngIf="searchTerm == ''; else hasSearchTerm">
+        <ion-row
+          style="height: 100%; justify-content: center; align-items: center"
+          class="no-items-message"
+        >
+          <ion-col
+            text-center
+            [ngStyle]="{'text-align': 'center', color: 'gray'}"
+          >
+            <ion-icon
+              name="flower-outline"
+              size="large"
+              color="medium"
+            ></ion-icon>
+            <p class="gray-text">Enter a query</p>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <ng-template #hasSearchTerm>
+        <!-- The paginator didn't yet load the items (we're still searching). -->
+        <ng-container *ngIf="searching; else noResults">
+          <ion-row
+            style="height: 100%; justify-content: center; align-items: center"
+            class="no-items-message"
+          >
+            <ion-col
+              text-center
+              [ngStyle]="{'text-align': 'center', color: 'gray'}"
+            >
+              <ion-spinner size="large" color="medium"></ion-spinner>
+              <p class="gray-text">Searching...</p>
+            </ion-col>
+          </ion-row>
+        </ng-container>
+
+        <!-- The loaded items were an empty list (no results found) -->
+        <ng-template #noResults>
+          <ion-row
+            *ngIf="searchFinished"
+            style="height: 100%; justify-content: center; align-items: center"
+            class="no-items-message"
+          >
+            <ion-col
+              text-center
+              [ngStyle]="{'text-align': 'center', color: 'gray'}"
+            >
+              <ion-icon
+                name="sad-outline"
+                size="large"
+                color="medium"
+              ></ion-icon>
+              <p class="gray-text">No results were found</p>
+            </ion-col>
+          </ion-row>
+        </ng-template>
+      </ng-template>
+    </ng-template>
+  </ng-container>
 
   <ion-infinite-scroll (ionInfinite)="paginator.infiniteScrollEvent($event)">
     <ion-infinite-scroll-content
